@@ -7,486 +7,637 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mi Vida RPG">
 <title>Mi Vida RPG</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0a0f;
-  --bg2: #12121a;
-  --bg3: #1a1a26;
-  --border: #2a2a40;
-  --purple: #7c5cbf;
-  --purple-light: #a87fff;
-  --gold: #f0b429;
-  --gold-dark: #a07010;
-  --green: #2ecc71;
-  --red: #e74c3c;
-  --red-dark: #c0392b;
-  --cyan: #00e5ff;
-  --text: #e8e8f0;
-  --text2: #8888aa;
-  --pixel: 'Press Start 2P', monospace;
-  --mono: 'Share Tech Mono', monospace;
+  --bg:       #080810;
+  --bg2:      #10101e;
+  --bg3:      #181828;
+  --bg4:      #1e1e32;
+  --border:   #2a2a45;
+  --border2:  #3a3a60;
+  --purple:   #6c47d4;
+  --purpleL:  #9b72ff;
+  --purpleLL: #c4a8ff;
+  --gold:     #f5c842;
+  --goldD:    #b89020;
+  --green:    #2ed573;
+  --greenD:   #1a8a48;
+  --red:      #ff4757;
+  --redD:     #c0392b;
+  --cyan:     #00e5ff;
+  --text:     #e8e8f8;
+  --text2:    #7878aa;
+  --text3:    #4a4a78;
+  --pixel:    'Press Start 2P', monospace;
+  --vt:       'VT323', monospace;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { background: var(--bg); color: var(--text); font-family: var(--mono); min-height: 100vh; overflow-x: hidden; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);height:100%}
+body{font-family:var(--vt);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:18px}
 
-/* Scanlines overlay */
-body::before {
-  content: '';
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-  pointer-events: none; z-index: 9999;
+/* scanlines */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:9000}
+
+/* ── HEADER ── */
+.header{
+  position:sticky;top:0;z-index:500;
+  background:var(--bg2);
+  border-bottom:2px solid var(--purple);
+  padding:10px 16px;
+  padding-top:calc(10px + var(--safe-top));
+  display:flex;align-items:center;gap:10px;
+}
+.hdr-title{font-family:var(--pixel);font-size:8px;color:var(--purpleL);flex:1}
+.hdr-title span{display:block;font-size:6px;color:var(--text2);margin-top:3px}
+.hdr-sucres{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg3);border:1px solid var(--goldD);
+  border-radius:4px;padding:5px 10px;
+  font-family:var(--pixel);font-size:9px;color:var(--gold);
+}
+.hdr-gear{
+  width:34px;height:34px;border-radius:4px;
+  background:var(--bg3);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;
 }
 
-/* Header */
-.header {
-  background: var(--bg2);
-  border-bottom: 2px solid var(--purple);
-  padding: 12px 16px 8px;
-  position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; gap: 10px;
+/* ── TABS ── */
+.tabs{
+  display:flex;background:var(--bg2);
+  border-bottom:2px solid var(--border);
+  position:sticky;top:calc(54px + var(--safe-top));z-index:400;
 }
-.header-logo { font-family: var(--pixel); font-size: 9px; color: var(--purple-light); line-height: 1.6; }
-.header-logo span { color: var(--gold); display: block; font-size: 7px; margin-top: 2px; }
-.header-baro {
-  margin-left: auto;
-  background: var(--bg3); border: 1px solid var(--gold-dark);
-  border-radius: 4px; padding: 4px 10px;
-  font-family: var(--pixel); font-size: 8px; color: var(--gold);
-  display: flex; align-items: center; gap: 6px;
+.tab{
+  flex:1;padding:11px 4px;text-align:center;
+  font-family:var(--pixel);font-size:8px;color:var(--text2);
+  cursor:pointer;border-bottom:3px solid transparent;
+  transition:all .2s;
+}
+.tab.active{color:var(--purpleL);border-bottom-color:var(--purpleL)}
+
+/* ── SCREENS ── */
+.screen{display:none;padding:14px 14px calc(30px + var(--safe-bot))}
+.screen.active{display:block}
+
+/* ── CHARACTER CARD ── */
+.char-card{
+  background:var(--bg2);border:1px solid var(--purple);
+  border-radius:8px;padding:16px;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.char-card::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(108,71,212,.18) 0%,transparent 70%);
+}
+.char-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.char-sprite{
+  width:90px;height:90px;flex-shrink:0;
+  background:var(--bg3);border:2px solid var(--purple);
+  border-radius:6px;position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.char-sprite svg{image-rendering:pixelated;width:80px;height:80px}
+.char-info{flex:1;min-width:0}
+.char-stage{font-family:var(--pixel);font-size:8px;color:var(--purpleLL);margin-bottom:4px}
+.char-name-big{font-family:var(--pixel);font-size:11px;color:var(--text);margin-bottom:6px;line-height:1.4}
+.streak-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(245,200,66,.12);border:1px solid var(--goldD);
+  border-radius:4px;padding:3px 8px;
+  font-family:var(--pixel);font-size:7px;color:var(--gold);
 }
 
-/* Tabs */
-.tabs {
-  display: flex; background: var(--bg2);
-  border-bottom: 2px solid var(--border);
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+/* Stats row */
+.stats-row{display:flex;gap:8px;margin-top:10px}
+.stat-box{
+  flex:1;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:6px;padding:8px;text-align:center;
 }
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex: 1; min-width: 70px;
-  padding: 10px 4px; text-align: center;
-  font-family: var(--pixel); font-size: 7px; color: var(--text2);
-  cursor: pointer; border-bottom: 2px solid transparent;
-  transition: all .2s; white-space: nowrap;
-}
-.tab.active { color: var(--purple-light); border-bottom-color: var(--purple-light); }
+.stat-box-label{font-size:11px;color:var(--text2);margin-bottom:3px}
+.stat-box-val{font-family:var(--pixel);font-size:10px}
+.stat-val-hp{color:var(--red)}
+.stat-val-xp{color:var(--purpleL)}
+.stat-val-sc{color:var(--gold)}
 
-/* Screens */
-.screen { display: none; padding: 12px; padding-bottom: 30px; }
-.screen.active { display: block; }
+/* HP bar */
+.hp-section{margin-top:12px}
+.hp-header{display:flex;justify-content:space-between;margin-bottom:5px}
+.hp-label{font-size:13px;color:var(--text2)}
+.hp-num{font-family:var(--pixel);font-size:9px;color:var(--red)}
+.hp-track{
+  height:14px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:3px;overflow:hidden;
+}
+.hp-fill{
+  height:100%;border-radius:3px;
+  transition:width .5s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.hp-fill::after{
+  content:'';position:absolute;top:0;right:0;
+  width:6px;height:100%;background:rgba(255,255,255,.25);
+  animation:hpShimmer 1.8s ease-in-out infinite;
+}
+@keyframes hpShimmer{0%,100%{opacity:.2}50%{opacity:.8}}
 
-/* Profile card */
-.profile-card {
-  background: var(--bg2); border: 1px solid var(--purple);
-  border-radius: 6px; padding: 16px; margin-bottom: 12px;
-  position: relative; overflow: hidden;
+/* XP bar */
+.xp-section{margin-top:8px}
+.xp-track{
+  height:8px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:2px;overflow:hidden;
 }
-.profile-card::before {
-  content: '';
-  position: absolute; top: 0; right: 0;
-  width: 80px; height: 80px;
-  background: radial-gradient(circle, rgba(124,92,191,0.15) 0%, transparent 70%);
+.xp-fill{
+  height:100%;background:linear-gradient(90deg,var(--purple),var(--purpleL));
+  border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);
 }
-.char-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.char-avatar {
-  width: 56px; height: 56px; border-radius: 4px;
-  background: var(--bg3); border: 2px solid var(--purple);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px; flex-shrink: 0;
-}
-.char-name { font-family: var(--pixel); font-size: 10px; color: var(--text); margin-bottom: 4px; }
-.char-title { font-size: 11px; color: var(--purple-light); margin-bottom: 2px; }
-.char-status { font-size: 11px; }
-.status-alive { color: var(--green); }
-.status-dead { color: var(--red); animation: blink 1s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-/* XP bar global */
-.xp-section { margin-bottom: 10px; }
-.xp-header { display: flex; justify-content: space-between; font-size: 10px; color: var(--text2); margin-bottom: 5px; }
-.xp-header strong { color: var(--gold); font-family: var(--pixel); font-size: 8px; }
-.xp-track {
-  height: 12px; background: var(--bg3); border: 1px solid var(--border);
-  border-radius: 2px; overflow: hidden; position: relative;
+/* Stage progress dots */
+.stage-dots{display:flex;gap:4px;margin-top:8px;align-items:center}
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--bg4);border:1px solid var(--border2);
+  transition:all .3s;
 }
-.xp-fill {
-  height: 100%; background: linear-gradient(90deg, var(--purple), var(--purple-light));
-  border-radius: 2px; transition: width .5s cubic-bezier(.4,0,.2,1);
-  position: relative;
-}
-.xp-fill::after {
-  content: '';
-  position: absolute; top: 0; right: 0; width: 4px; height: 100%;
-  background: white; opacity: .4; animation: shimmer 1.5s infinite;
-}
-@keyframes shimmer { 0%,100%{opacity:.2} 50%{opacity:.6} }
+.dot.on{background:var(--purpleL);border-color:var(--purpleL);box-shadow:0 0 6px var(--purple)}
+.dot.current{background:var(--gold);border-color:var(--gold);box-shadow:0 0 6px var(--gold)}
+.dot-label{font-size:10px;color:var(--text2);margin-left:4px}
 
-/* Stats table */
-.section-label {
-  font-family: var(--pixel); font-size: 7px; color: var(--text2);
-  letter-spacing: .1em; margin-bottom: 10px;
-  display: flex; align-items: center; gap: 8px;
+/* ── HABITS GRID ── */
+.section-hdr{
+  font-family:var(--pixel);font-size:7px;color:var(--text2);
+  letter-spacing:.1em;margin:16px 0 10px;
+  display:flex;align-items:center;gap:8px;
 }
-.section-label::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-.stats-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 6px; overflow: hidden; margin-bottom: 12px;
-}
-.stat-row {
-  padding: 10px 12px; border-bottom: 1px solid var(--border);
-  display: grid; grid-template-columns: 1fr auto;
-  gap: 8px; align-items: center;
-}
-.stat-row:last-child { border-bottom: none; }
-.stat-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.stat-icon { font-size: 16px; }
-.stat-name { font-size: 13px; font-weight: bold; }
-.stat-lv { font-family: var(--pixel); font-size: 8px; color: var(--gold); background: var(--bg3); padding: 2px 6px; border-radius: 2px; }
-.stat-nums { display: flex; gap: 10px; font-size: 11px; color: var(--text2); }
-.stat-nums span { display: flex; align-items: center; gap: 3px; }
-.stat-hp-bar { width: 70px; height: 6px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
-.stat-hp-fill { height: 100%; border-radius: 2px; transition: width .4s; }
-.prog-squares {
-  display: flex; gap: 2px; margin-top: 5px; flex-wrap: wrap;
-}
-.sq {
-  width: 13px; height: 13px; border-radius: 2px;
-  background: var(--bg3); border: 1px solid var(--border);
-  transition: all .2s;
-}
-.sq.on { background: var(--purple); border-color: var(--purple-light); }
+.section-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-hdr.pos{color:var(--green)}
+.section-hdr.neg{color:var(--red)}
 
-/* Habits */
-.habit-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 6px; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px; cursor: pointer;
-  transition: all .15s; -webkit-user-select: none;
+.habits-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.habit-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:12px 10px;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .1s,border-color .2s,background .2s;
+  -webkit-user-select:none;min-height:80px;
+  display:flex;flex-direction:column;justify-content:space-between;
 }
-.habit-item:active { transform: scale(.98); }
-.habit-item.done-pos {
-  background: rgba(46,204,113,.08);
-  border-color: rgba(46,204,113,.4);
+.habit-card:active{transform:scale(.96)}
+.habit-card.done-pos{background:rgba(46,213,115,.09);border-color:rgba(46,213,115,.5)}
+.habit-card.done-neg{background:rgba(255,71,87,.09);border-color:rgba(255,71,87,.5)}
+.habit-icon{font-size:22px;margin-bottom:5px;display:block}
+.habit-name{font-size:13px;font-weight:bold;line-height:1.3;margin-bottom:4px}
+.habit-pts{display:flex;gap:4px;flex-wrap:wrap}
+.hpt{font-size:11px;padding:1px 5px;border-radius:3px}
+.hpt-xp{background:rgba(155,114,255,.2);color:var(--purpleLL)}
+.hpt-hp{background:rgba(46,213,115,.15);color:#88ffbb}
+.hpt-hp-neg{background:rgba(255,71,87,.15);color:#ff9999}
+.hpt-sc{background:rgba(245,200,66,.15);color:var(--gold)}
+.hpt-sc-neg{background:rgba(255,71,87,.15);color:#ff9999}
+.habit-check{
+  position:absolute;top:8px;right:8px;
+  width:20px;height:20px;border-radius:4px;
+  border:2px solid var(--border2);background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;transition:all .2s;
 }
-.habit-item.done-neg {
-  background: rgba(231,76,60,.08);
-  border-color: rgba(231,76,60,.4);
-}
-.cb {
-  width: 22px; height: 22px; flex-shrink: 0;
-  border-radius: 3px; border: 2px solid var(--border);
-  background: var(--bg3); display: flex;
-  align-items: center; justify-content: center;
-  transition: all .2s;
-}
-.cb.on-pos { background: var(--green); border-color: var(--green); }
-.cb.on-neg { background: var(--red); border-color: var(--red); }
-.cb-check { opacity: 0; font-size: 12px; transition: opacity .15s; }
-.cb.on-pos .cb-check, .cb.on-neg .cb-check { opacity: 1; }
-.habit-body { flex: 1; }
-.habit-name { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-.habit-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-.tag {
-  font-size: 10px; padding: 2px 5px; border-radius: 3px;
-  font-family: var(--mono);
-}
-.tag-xp { background: rgba(124,92,191,.2); color: var(--purple-light); }
-.tag-xp-neg { background: rgba(231,76,60,.15); color: #ff8888; }
-.tag-hp { background: rgba(46,204,113,.15); color: #88ffaa; }
-.tag-hp-neg { background: rgba(231,76,60,.15); color: #ff8888; }
-.tag-baro { background: rgba(240,180,41,.15); color: var(--gold); }
-.tag-area { background: var(--bg3); color: var(--text2); }
-.habit-group {
-  font-family: var(--pixel); font-size: 7px;
-  padding: 6px 0 8px; margin-top: 4px;
-}
-.habit-group.pos { color: var(--green); }
-.habit-group.neg { color: var(--red); }
+.habit-card.done-pos .habit-check{background:var(--green);border-color:var(--green);color:#000}
+.habit-card.done-neg .habit-check{background:var(--red);border-color:var(--red);color:#fff}
 
-/* Shop */
-.shop-item {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 6px; padding: 12px; margin-bottom: 8px;
-  display: flex; align-items: center; gap: 10px;
+/* ── FLOATING NUMBERS ── */
+.float-num{
+  position:fixed;font-family:var(--pixel);font-size:10px;
+  pointer-events:none;z-index:9999;
+  animation:floatUp .9s ease-out forwards;
 }
-.shop-emoji { font-size: 24px; flex-shrink: 0; width: 36px; text-align: center; }
-.shop-body { flex: 1; }
-.shop-name { font-size: 13px; font-weight: bold; margin-bottom: 3px; }
-.shop-meta { font-size: 11px; color: var(--text2); }
-.shop-price { color: var(--gold); font-weight: bold; }
-.shop-effect-pos { color: var(--green); }
-.shop-effect-neg { color: var(--red); }
-.buy-btn {
-  padding: 8px 12px; border-radius: 4px; font-family: var(--pixel);
-  font-size: 8px; cursor: pointer; border: 1px solid;
-  transition: all .15s; white-space: nowrap; flex-shrink: 0;
+@keyframes floatUp{
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  60%{opacity:1;transform:translateY(-50px) scale(1.1)}
+  100%{opacity:0;transform:translateY(-80px) scale(.8)}
 }
-.buy-btn:active { transform: scale(.95); }
-.buy-btn-ready { background: rgba(240,180,41,.1); border-color: var(--gold); color: var(--gold); }
-.buy-btn-cant { background: var(--bg3); border-color: var(--border); color: var(--text2); cursor: not-allowed; }
-.buy-btn-done { background: rgba(46,204,113,.1); border-color: var(--green); color: var(--green); cursor: default; }
 
-/* Daily summary cards */
-.day-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-.day-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 6px; padding: 10px 8px; text-align: center;
+/* ── SHOP ── */
+.shop-header-bar{
+  background:var(--bg2);border:1px solid var(--goldD);
+  border-radius:6px;padding:10px 14px;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;color:var(--text2);
 }
-.day-card-label { font-size: 9px; color: var(--text2); margin-bottom: 5px; }
-.day-card-val { font-family: var(--pixel); font-size: 11px; }
-.val-xp { color: var(--purple-light); }
-.val-baro { color: var(--gold); }
-.val-hp-pos { color: var(--green); }
-.val-hp-neg { color: var(--red); }
-
-/* YOU DIED banner */
-.died-banner {
-  background: rgba(231,76,60,.1); border: 2px solid var(--red);
-  border-radius: 6px; padding: 14px; margin-bottom: 12px;
-  text-align: center; display: none;
+.shop-sucres{font-family:var(--pixel);font-size:13px;color:var(--gold)}
+.shop-item{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:12px;margin-bottom:8px;
+  display:flex;align-items:center;gap:12px;
 }
-.died-title { font-family: var(--pixel); font-size: 14px; color: var(--red); margin-bottom: 8px; animation: blink 1s infinite; }
-.died-text { font-size: 12px; color: var(--text2); }
-
-/* Level up flash */
-.levelup-flash {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(124,92,191,.15); pointer-events: none;
-  opacity: 0; z-index: 9998;
-  transition: opacity .3s;
+.shop-emoji{font-size:28px;flex-shrink:0;width:38px;text-align:center}
+.shop-body{flex:1;min-width:0}
+.shop-name{font-size:15px;font-weight:bold;margin-bottom:3px}
+.shop-meta{font-size:13px;color:var(--text2)}
+.shop-price{color:var(--gold);font-weight:bold}
+.shop-eff-pos{color:var(--green)}
+.shop-eff-neg{color:var(--red)}
+.buy-btn{
+  font-family:var(--pixel);font-size:8px;
+  padding:8px 10px;border-radius:5px;
+  border:1px solid;cursor:pointer;
+  transition:all .15s;white-space:nowrap;flex-shrink:0;
 }
-.levelup-flash.show { opacity: 1; }
+.buy-btn:active{transform:scale(.93)}
+.btn-ready{background:rgba(245,200,66,.1);border-color:var(--gold);color:var(--gold)}
+.btn-cant{background:var(--bg3);border-color:var(--border);color:var(--text3);cursor:not-allowed}
+.btn-done{background:rgba(46,213,115,.1);border-color:var(--green);color:var(--green);cursor:default}
 
-/* Toast */
-.toast {
-  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--bg3); border: 1px solid var(--purple);
-  border-radius: 6px; padding: 10px 18px;
-  font-family: var(--pixel); font-size: 8px; color: var(--purple-light);
-  white-space: nowrap; z-index: 10000;
-  opacity: 0; transition: all .3s;
+/* ── SETTINGS PAGE ── */
+.settings-page{
+  display:none;position:fixed;inset:0;
+  background:var(--bg);z-index:800;
+  padding:16px;padding-top:calc(16px + var(--safe-top));
+  overflow-y:auto;
 }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* Reset button */
-.reset-area {
-  background: var(--bg2); border: 1px solid var(--red-dark);
-  border-radius: 6px; padding: 14px; margin-bottom: 12px;
+.settings-page.open{display:block}
+.settings-back{
+  font-family:var(--pixel);font-size:8px;color:var(--purpleL);
+  cursor:pointer;margin-bottom:20px;display:flex;align-items:center;gap:8px;
 }
-.reset-btn {
-  width: 100%; padding: 12px; border-radius: 4px;
-  background: rgba(231,76,60,.1); border: 1px solid var(--red-dark);
-  color: var(--red); font-family: var(--pixel); font-size: 8px;
-  cursor: pointer; margin-top: 8px; transition: all .2s;
+.info-block{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:14px;margin-bottom:10px;
+  font-size:15px;line-height:1.8;color:var(--text2);
 }
-.reset-btn:active { background: rgba(231,76,60,.25); }
-
-/* Titles table */
-.titles-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.titles-table th { font-family: var(--pixel); font-size: 7px; color: var(--text2); padding: 6px 8px; text-align: left; border-bottom: 1px solid var(--border); }
-.titles-table td { padding: 8px; border-bottom: 1px solid var(--border); }
-.titles-table tr:last-child td { border-bottom: none; }
-.titles-table tr.current-lv td { background: rgba(124,92,191,.1); color: var(--purple-light); }
-
-/* Info card */
-.info-card {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 6px; padding: 14px; margin-bottom: 10px; font-size: 12px; line-height: 1.7; color: var(--text2);
+.info-block strong{color:var(--text)}
+.info-block .title{font-family:var(--pixel);font-size:8px;color:var(--purpleL);margin-bottom:10px;display:block}
+.titles-tbl{width:100%;border-collapse:collapse;font-size:14px}
+.titles-tbl th{font-family:var(--pixel);font-size:7px;color:var(--text3);padding:6px;text-align:left;border-bottom:1px solid var(--border)}
+.titles-tbl td{padding:8px 6px;border-bottom:1px solid var(--border)}
+.titles-tbl tr.cur td{color:var(--purpleL)}
+.danger-btn{
+  width:100%;padding:14px;border-radius:6px;
+  border:1px solid;font-family:var(--pixel);font-size:8px;
+  cursor:pointer;margin-top:6px;transition:all .2s;
 }
-.info-card strong { color: var(--text); }
+.dbtn-day{background:rgba(255,71,87,.08);border-color:var(--redD);color:var(--red)}
+.dbtn-all{background:rgba(100,100,100,.08);border-color:#444;color:#888;margin-top:10px}
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:calc(28px + var(--safe-bot));left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:var(--bg3);border:1px solid var(--purple);
+  border-radius:6px;padding:10px 18px;
+  font-family:var(--pixel);font-size:8px;color:var(--purpleL);
+  white-space:nowrap;z-index:9990;
+  opacity:0;transition:all .3s;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── LEVELUP OVERLAY ── */
+.lvup{
+  position:fixed;inset:0;z-index:9995;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .3s;
+}
+.lvup.show{opacity:1}
+.lvup-inner{
+  font-family:var(--pixel);text-align:center;
+  text-shadow:0 0 20px var(--purpleL);
+}
+.lvup-line1{font-size:13px;color:var(--gold);display:block;margin-bottom:8px}
+.lvup-line2{font-size:9px;color:var(--purpleLL)}
 </style>
 </head>
 <body>
 
-<div class="levelup-flash" id="lvFlash"></div>
-<div class="toast" id="toast"></div>
-
+<!-- HEADER -->
 <div class="header">
-  <div class="char-avatar" id="hdr-avatar" style="width:36px;height:36px;font-size:18px;border:1px solid var(--purple)">🎮</div>
-  <div class="header-logo">MI VIDA RPG <span id="hdr-level">NIV. 1 — INICIADO</span></div>
-  <div class="header-baro">💰 <span id="hdr-baro">0</span></div>
+  <div class="hdr-title">MI VIDA RPG <span id="hdr-sub">NIVEL 1 — MENDIGO</span></div>
+  <div class="hdr-sucres">S/ <span id="hdr-sucres">0</span></div>
+  <div class="hdr-gear" onclick="openSettings()">⚙️</div>
 </div>
 
+<!-- TABS -->
 <div class="tabs">
-  <div class="tab active" onclick="switchTab('perfil')">👤 PERFIL</div>
-  <div class="tab" onclick="switchTab('habitos')">✅ HABITOS</div>
+  <div class="tab active" onclick="switchTab('inicio')">🏠 INICIO</div>
   <div class="tab" onclick="switchTab('tienda')">🛒 TIENDA</div>
-  <div class="tab" onclick="switchTab('info')">📖 INFO</div>
 </div>
 
-<!-- PERFIL -->
-<div class="screen active" id="screen-perfil">
-  <div class="died-banner" id="died-banner">
-    <div class="died-title">☠ YOU DIED ☠</div>
-    <div class="died-text">Castigo: Recorrer 50 km en menos de 24 horas antes de continuar.</div>
-  </div>
+<!-- ══ INICIO ══ -->
+<div class="screen active" id="screen-inicio">
 
-  <div class="profile-card">
-    <div class="char-row">
-      <div class="char-avatar" id="avatar">🐣</div>
-      <div>
-        <div class="char-name" id="char-name">MI PERSONAJE</div>
-        <div class="char-title" id="char-title">Nivel 1 — Iniciado</div>
-        <div class="char-status status-alive" id="char-status">▶ Vivo y en pie</div>
+  <!-- Character Card -->
+  <div class="char-card">
+    <div class="char-top">
+      <div class="char-sprite" id="char-sprite"></div>
+      <div class="char-info">
+        <div class="char-stage" id="char-stage">ETAPA 1 DE 7</div>
+        <div class="char-name-big" id="char-name">EL MENDIGO</div>
+        <div class="streak-badge">🔥 <span id="streak-num">0</span> DIAS SEGUIDOS</div>
+        <div class="stage-dots" id="stage-dots"></div>
       </div>
     </div>
-    <div class="xp-section">
-      <div class="xp-header">
-        <span>XP GLOBAL</span>
-        <strong id="xp-label">0 / 100 XP (0%)</strong>
+
+    <!-- HP -->
+    <div class="hp-section">
+      <div class="hp-header">
+        <span class="hp-label">❤️ HP — Puntos de Vida</span>
+        <span class="hp-num" id="hp-label">100 / 100</span>
       </div>
-      <div class="xp-track">
-        <div class="xp-fill" id="xp-fill" style="width:0%"></div>
+      <div class="hp-track"><div class="hp-fill" id="hp-fill" style="width:100%"></div></div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-box-label">⚡ XP</div>
+        <div class="stat-box-val stat-val-xp" id="stat-xp">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">💰 SUCRES</div>
+        <div class="stat-box-val stat-val-sc" id="stat-sc">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">📅 HOY</div>
+        <div class="stat-box-val" id="stat-today" style="color:var(--cyan);font-size:8px">+0 XP</div>
       </div>
     </div>
+
+    <!-- XP bar to next stage -->
+    <div class="xp-section" style="margin-top:10px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:4px">
+        <span>Progreso a siguiente etapa</span>
+        <span id="xp-next-label">0 / 300 XP</span>
+      </div>
+      <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- Stage dots -->
+    <div class="stage-dots" id="stage-dots-row" style="margin-top:10px;justify-content:center"></div>
   </div>
 
-  <div class="day-cards">
-    <div class="day-card"><div class="day-card-label">XP HOY</div><div class="day-card-val val-xp" id="day-xp">+0</div></div>
-    <div class="day-card"><div class="day-card-label">BAROS HOY</div><div class="day-card-val val-baro" id="day-baro">+0</div></div>
-    <div class="day-card"><div class="day-card-label">HP NETO</div><div class="day-card-val" id="day-hp">+0</div></div>
-  </div>
+  <!-- Positive Habits -->
+  <div class="section-hdr pos">⚡ HABITOS POSITIVOS</div>
+  <div class="habits-grid" id="pos-grid"></div>
 
-  <div class="section-label">STATS POR AREA</div>
-  <div class="stats-card" id="stats-list"></div>
+  <!-- Negative Habits -->
+  <div class="section-hdr neg" style="margin-top:8px">☠ HABITOS NEGATIVOS</div>
+  <div class="habits-grid" id="neg-grid"></div>
+
 </div>
 
-<!-- HABITOS -->
-<div class="screen" id="screen-habitos">
-  <div class="day-cards">
-    <div class="day-card"><div class="day-card-label">XP HOY</div><div class="day-card-val val-xp" id="day-xp2">+0</div></div>
-    <div class="day-card"><div class="day-card-label">BAROS HOY</div><div class="day-card-val val-baro" id="day-baro2">+0</div></div>
-    <div class="day-card"><div class="day-card-label">HP NETO</div><div class="day-card-val" id="day-hp2">+0</div></div>
-  </div>
-  <div class="habit-group pos">⚡ HABITOS POSITIVOS</div>
-  <div id="pos-habits"></div>
-  <div class="habit-group neg" style="margin-top:4px">☠ HABITOS NEGATIVOS</div>
-  <div id="neg-habits"></div>
-</div>
-
-<!-- TIENDA -->
+<!-- ══ TIENDA ══ -->
 <div class="screen" id="screen-tienda">
-  <div class="info-card" style="margin-bottom:12px">
-    <strong>💰 Baros disponibles:</strong> <span id="shop-baro-total" style="color:var(--gold);font-family:var(--pixel);font-size:12px">0</span><br>
-    <span style="font-size:11px">Solo puedes comprar si tienes suficientes Baros. El efecto se aplica al instante.</span>
+  <div class="shop-header-bar">
+    <span>💰 Sucres disponibles:</span>
+    <span class="shop-sucres" id="shop-sc">0</span>
   </div>
   <div id="shop-list"></div>
 </div>
 
-<!-- INFO -->
-<div class="screen" id="screen-info">
-  <div class="section-label">COMO USAR</div>
-  <div class="info-card">
-    <strong>1. Marca tus habitos cada dia</strong><br>
-    Ve a la pestaña HABITOS y marca lo que hiciste. Los puntos se suman solos a tus stats.<br><br>
-    <strong>2. Acumula Baros</strong><br>
-    Con Baros puedes canjear recompensas en la Tienda. Solo puedes comprar si tienes suficiente.<br><br>
-    <strong>3. Reset automatico</strong><br>
-    Al abrir la app un nuevo dia, el checklist se resetea solo. Tu progreso acumulado se mantiene.<br><br>
-    <strong>4. Guardar en iPhone</strong><br>
-    Abre este archivo en Safari → toca el botón Compartir → "Añadir a pantalla de inicio". Funciona como app.
+<!-- ══ SETTINGS ══ -->
+<div class="settings-page" id="settings-page">
+  <div class="settings-back" onclick="closeSettings()">← VOLVER</div>
+
+  <div class="info-block">
+    <span class="title">⚙ COMO FUNCIONA</span>
+    <strong>HP:</strong> Empieza en 100. Los hábitos negativos restan 5-10 HP. Si llega a 0, es game over y debes cumplir un castigo.<br>
+    <strong>XP:</strong> Se acumula con hábitos positivos. Determina tu nivel global.<br>
+    <strong>Sucres:</strong> Moneda del juego. Gánalos con positivos, piérdelos con negativos. Gástalos en la Tienda.<br>
+    <strong>Racha:</strong> Días consecutivos marcando al menos un hábito positivo.<br>
+    <strong>Evolución:</strong> Depende de XP acumulada + racha de días. ¡Las dos cosas importan!
   </div>
 
-  <div class="section-label">TABLA DE NIVELES</div>
-  <div class="stats-card">
-    <table class="titles-table" id="titles-table"></table>
+  <div class="info-block">
+    <span class="title">🎭 LAS 7 ETAPAS</span>
+    <table class="titles-tbl" id="stages-tbl"></table>
   </div>
 
-  <div class="section-label">ZONA PELIGROSA</div>
-  <div class="reset-area">
-    <div style="font-size:12px;color:var(--text2)">Resetea el checklist de hoy manualmente. Los stats acumulados NO se pierden.</div>
-    <button class="reset-btn" onclick="resetDay(true)">⚠ RESETEAR DIA DE HOY</button>
-  </div>
-  <div class="reset-area" style="border-color:#555">
-    <div style="font-size:12px;color:var(--text2)">Reinicia TODOS los stats al estado inicial. Accion irreversible.</div>
-    <button class="reset-btn" style="border-color:#555;color:#888" onclick="hardReset()">☠ REINICIO TOTAL DEL JUEGO</button>
+  <div class="info-block" style="border-color:var(--redD)">
+    <span class="title" style="color:var(--red)">⚠ ZONA PELIGROSA</span>
+    <button class="danger-btn dbtn-day" onclick="resetDay()">RESETEAR CHECKLIST DE HOY</button>
+    <button class="danger-btn dbtn-all" onclick="hardReset()">☠ REINICIO TOTAL DEL JUEGO</button>
   </div>
 </div>
 
+<!-- Level up overlay -->
+<div class="lvup" id="lvup">
+  <div class="lvup-inner">
+    <span class="lvup-line1" id="lvup-l1">¡EVOLUCION!</span>
+    <span class="lvup-line2" id="lvup-l2">NUEVA ETAPA</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const TITLES = {1:'Iniciado',2:'Aventurero',3:'Guardian',4:'Heroe',5:'Elite',6:'Maestro',7:'Veterano',8:'Campeon',9:'Grandmaster',10:'Leyenda'};
-const TITLE_XP = [0,100,200,300,400,500,600,700,800,1000];
-const AVATARS = {1:'🐣',2:'⚔️',3:'🛡️',4:'🌟',5:'💎',6:'🔥',7:'🌙',8:'⚡',9:'✨',10:'👑'};
-
-const AREAS = [
-  {id:'salud',name:'Salud',icon:'💪'},
-  {id:'relaciones',name:'Relaciones',icon:'❤️'},
-  {id:'finanzas',name:'Finanzas',icon:'💼'},
-  {id:'negocio',name:'Negocio',icon:'🚀'},
-  {id:'aprendizaje',name:'Aprendizaje',icon:'📚'},
-  {id:'creatividad',name:'Creatividad',icon:'🎨'},
+/* ════════════════════════════════
+   DATA
+════════════════════════════════ */
+const STAGES = [
+  { name:'EL MENDIGO',    xpReq:0,   streakReq:0,  color:'#888' },
+  { name:'EL VAGABUNDO',  xpReq:100, streakReq:3,  color:'#a07040' },
+  { name:'EL CAMPESINO',  xpReq:250, streakReq:7,  color:'#6aaa44' },
+  { name:'EL MERCADER',   xpReq:500, streakReq:14, color:'#c89020' },
+  { name:'EL CABALLERO',  xpReq:900, streakReq:21, color:'#8888dd' },
+  { name:'EL MINISTRO',   xpReq:1400,streakReq:30, color:'#cc5522' },
+  { name:'EL PRESIDENTE', xpReq:2000,streakReq:45, color:'#f5c842' },
 ];
 
-const HABITS = [
-  {id:'h1',name:'Hacer ejercicio',xp:20,hp:10,baro:5,area:'salud',neg:false},
-  {id:'h2',name:'Leer 30 minutos',xp:15,hp:0,baro:5,area:'aprendizaje',neg:false},
-  {id:'h3',name:'Aprender algo nuevo',xp:25,hp:0,baro:10,area:'aprendizaje',neg:false},
-  {id:'h4',name:'Crear contenido',xp:30,hp:0,baro:15,area:'creatividad',neg:false},
-  {id:'h5',name:'Avanzar en mi negocio',xp:50,hp:0,baro:50,area:'negocio',neg:false},
-  {id:'h6',name:'Conectar con alguien',xp:20,hp:5,baro:10,area:'relaciones',neg:false},
-  {id:'h7',name:'Revisar mis finanzas',xp:15,hp:0,baro:20,area:'finanzas',neg:false},
-  {id:'h8',name:'Dormir 8 horas',xp:10,hp:20,baro:0,area:'salud',neg:false},
-  {id:'h9',name:'Comer saludable',xp:10,hp:5,baro:0,area:'salud',neg:false},
-  {id:'h10',name:'Meditar / respirar',xp:10,hp:10,baro:0,area:'salud',neg:false},
-  {id:'n1',name:'Procrastinar',xp:-10,hp:-5,baro:-5,area:'negocio',neg:true},
-  {id:'n2',name:'Dormir menos de 6h',xp:0,hp:-20,baro:0,area:'salud',neg:true},
-  {id:'n3',name:'Gastar innecesario',xp:-5,hp:0,baro:-20,area:'finanzas',neg:true},
-  {id:'n4',name:'Redes sociales +2h',xp:-10,hp:-5,baro:0,area:'negocio',neg:true},
-  {id:'n5',name:'Comer chatarra',xp:0,hp:-5,baro:0,area:'salud',neg:true},
+const HABITS_POS = [
+  {id:'h1', icon:'🏋️', name:'Ejercicio',          xp:20, hp:0,  sc:10},
+  {id:'h2', icon:'📖', name:'Leer',                xp:15, hp:5,  sc:8 },
+  {id:'h3', icon:'🧠', name:'Aprender algo nuevo', xp:25, hp:0,  sc:12},
+  {id:'h4', icon:'⚔️', name:'Mejorar habilidad',   xp:20, hp:0,  sc:10},
+  {id:'h5', icon:'🎨', name:'Crear algo',           xp:30, hp:0,  sc:15},
+  {id:'h6', icon:'🚀', name:'Avanzar negocio',      xp:50, hp:0,  sc:30},
+];
+const HABITS_NEG = [
+  {id:'n1', icon:'💤', name:'Procrastinar',         xp:-8,  hp:-8,  sc:-10},
+  {id:'n2', icon:'😴', name:'Dormir menos de 6h',   xp:0,   hp:-10, sc:-5 },
+  {id:'n3', icon:'🛍️', name:'Gastar innecesario',   xp:-5,  hp:-5,  sc:-15},
+  {id:'n4', icon:'📱', name:'Redes sociales +2h',   xp:-10, hp:-7,  sc:-8 },
+  {id:'n5', icon:'🍔', name:'Comer chatarra',        xp:0,   hp:-6,  sc:-5 },
+];
+const ALL_HABITS = [...HABITS_POS, ...HABITS_NEG];
+
+const SHOP_ITEMS = [
+  {id:'s1', icon:'🎮', name:'Día de videojuegos',    price:80,  hp:10,  area:'descanso'},
+  {id:'s2', icon:'👕', name:'Comprar ropa/accesorio', price:150, hp:0,   area:'personal'},
+  {id:'s3', icon:'🧑‍🤝‍🧑',name:'Salida con amigos',    price:120, hp:15,  area:'social'},
+  {id:'s4', icon:'🍺', name:'Chelitas',               price:100, hp:-8,  area:'social'},
+  {id:'s5', icon:'🍦', name:'Day pass chatarra',      price:60,  hp:0,   area:'comida'},
+  {id:'s6', icon:'🍕', name:'Cena especial',          price:200, hp:20,  area:'familia'},
+  {id:'s7', icon:'📱', name:'Comprar un curso',       price:300, hp:0,   xpBonus:60, area:'educacion'},
+  {id:'s8', icon:'🌴', name:'Viaje / salida corta',   price:500, hp:30,  area:'experiencia'},
 ];
 
-const SHOP = [
-  {id:'s1',name:'Day Pass Comida Chatarra',icon:'🍦',price:50,hp:0,area:'salud'},
-  {id:'s2',name:'Chelitas',icon:'🍺',price:130,hp:-30,area:'salud'},
-  {id:'s3',name:'Compra innecesaria',icon:'🛍️',price:80,hp:-10,area:'finanzas'},
-  {id:'s4',name:'Dia de series',icon:'🎥',price:150,hp:10,area:'salud'},
-  {id:'s5',name:'Casino night',icon:'🎰',price:300,hp:-50,area:'finanzas'},
-  {id:'s6',name:'Cena especial',icon:'🍕',price:300,hp:20,area:'relaciones'},
-  {id:'s7',name:'Comprar un curso',icon:'📱',price:500,hp:0,xpBonus:50,area:'aprendizaje'},
-  {id:'s8',name:'Salida o viaje corto',icon:'🌴',price:800,hp:30,area:'salud'},
-  {id:'s9',name:'Dia de descanso total',icon:'😴',price:100,hp:25,area:'salud'},
-];
-
-function defaultState() {
-  const areas = {};
-  AREAS.forEach(a => { areas[a.id] = {xp:0, hp:1000, baro:0}; });
-  return {areas, checked:{}, shopBought:{}, lastReset: new Date().toDateString(), prevLevel:1};
+/* ════════════════════════════════
+   STATE
+════════════════════════════════ */
+function defaultState(){
+  return {
+    hp:100, xp:0, sucres:0,
+    streak:0, lastActiveDay:'',
+    checked:{}, shopBought:{},
+    lastReset: new Date().toDateString(),
+  };
 }
-
 let S = defaultState();
-try {
-  const raw = localStorage.getItem('rpg_vida_v4');
-  if (raw) S = JSON.parse(raw);
-} catch(e) {}
+try{ const r=localStorage.getItem('rpg_v5'); if(r) S=JSON.parse(r); }catch(e){}
 
-function save() {
-  try { localStorage.setItem('rpg_vida_v4', JSON.stringify(S)); } catch(e) {}
+function save(){ try{ localStorage.setItem('rpg_v5',JSON.stringify(S)); }catch(e){} }
+
+/* ════════════════════════════════
+   STAGE LOGIC
+════════════════════════════════ */
+function getStageIdx(){
+  let idx=0;
+  for(let i=STAGES.length-1;i>=0;i--){
+    if(S.xp>=STAGES[i].xpReq && S.streak>=STAGES[i].streakReq){ idx=i; break; }
+  }
+  return idx;
+}
+function getNextStageXP(){
+  const i=getStageIdx();
+  if(i>=STAGES.length-1) return STAGES[STAGES.length-1].xpReq;
+  return STAGES[i+1].xpReq;
 }
 
-function globalXP() { return Object.values(S.areas).reduce((s,a) => s+a.xp, 0); }
-function globalBaro() { return Object.values(S.areas).reduce((s,a) => s+a.baro, 0); }
-function levelFor(xp) { return Math.max(1, Math.floor(xp/100)+1); }
-function globalLevel() { return levelFor(globalXP()); }
-function titleFor(lv) { return TITLES[Math.min(lv,10)] || 'Leyenda'; }
+/* ════════════════════════════════
+   CHARACTER SPRITES (pixel art SVG)
+════════════════════════════════ */
+function sprite(idx){
+  // Each sprite is a simple pixel art SVG character
+  const sprites=[
+    // 0: Mendigo — harapos, postura encorvada
+    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
+      <rect x="6" y="1" width="4" height="4" fill="#c8a060"/>
+      <rect x="5" y="5" width="6" height="5" fill="#7a5c3a"/>
+      <rect x="4" y="6" width="2" height="3" fill="#7a5c3a"/>
+      <rect x="10" y="6" width="2" height="3" fill="#7a5c3a"/>
+      <rect x="5" y="10" width="2" height="4" fill="#5a4030"/>
+      <rect x="9" y="10" width="2" height="4" fill="#5a4030"/>
+      <rect x="3" y="1" width="2" height="2" fill="#7a5c3a"/>
+      <rect x="5" y="2" width="1" height="1" fill="#222"/>
+      <rect x="8" y="2" width="1" height="1" fill="#222"/>
+      <rect x="6" y="4" width="2" height="1" fill="#a07050"/>
+    </svg>`,
+    // 1: Vagabundo — algo de ropa mejor, sombrero
+    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
+      <rect x="4" y="0" width="8" height="2" fill="#8b6914"/>
+      <rect x="5" y="2" width="6" height="1" fill="#8b6914"/>
+      <rect x="6" y="1" width="4" height="4" fill="#d4a870"/>
+      <rect x="5" y="5" width="6" height="5" fill="#6b8c3a"/>
+      <rect x="4" y="6" width="2" height="3" fill="#6b8c3a"/>
+      <rect x="10" y="6" width="2" height="3" fill="#6b8c3a"/>
+      <rect x="5" y="10" width="2" height="4" fill="#4a3828"/>
+      <rect x="9" y="10" width="2" height="4" fill="#4a3828"/>
+      <rect x="5" y="2" width="1" height="1" fill="#222"/>
+      <rect x="8" y="2" width="1" height="1" fill="#222"/>
+      <rect x="6" y="4" width="2" height="1" fill="#b08060"/>
+    </svg>`,
+    // 2: Campesino — ropa simple, herramienta
+    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
+      <rect x="6" y="1" width="4" height="4" fill="#d4a870"/>
+      <rect x="4" y="0" width="8" height="2" fill="#c8a820"/>
+      <rect x="5" y="5" width="6" height="5" fill="#a05828"/>
+      <rect x="4" y="6" width="2" height="3" fill="#a05828"/>
+      <rect x="10" y="6" width="2" height="3" fill="#a05828"/>
+      <rect x="5" y="10" width="2" height="4" fill="#604838"/>
+      <rect x="9" y="10" width="2" height="4" fill="#604838"/>
+      <rect x="13" y="5" width="1" height="8" fill="#8b6914"/>
+      <rect x="12" y="4" width="3" height="2" fill="#888"/>
+      <rect x="6" y="2" width="1" height="1" fill="#222"/>
+      <rect x="9" y="2" width="1" height="1" fill="#222"/>
+      <rect x="7" y="4" width="2" height="1" fill="#b08060"/>
+    </svg>`,
+    // 3: Mercader — ropa elegante, bolsa de oro
+    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
+      <rect x="6" y="1" width="4" height="4" fill="#e8c090"/>
+      <rect x="5" y="0" width="6" height="2" fill="#2a2a60"/>
+      <rect x="5" y="5" width="6" height="5" fill="#4a3a80"/>
+      <rect x="4" y="6" width="2" height="3" fill="#4a3a80"/>
+      <rect x="10" y="6" width="2" height="3" fill="#4a3a80"/>
+      <rect x="5" y="10" width="2" height="4" fill="#2a2050"/>
+      <rect x="9" y="10" width="2" height="4" fill="#2a2050"/>
+      <rect x="12" y="8" width="3" height="3" fill="#d4a820"/>
+      <rect x="13" y="7" width="1" height="1" fill="#d4a820"/>
+      <rect x="5" y="6" width="6" height="1" fill="#f5c842"/>
+      <rect x="6" y="2" width="1" height="1" fill="#222"/>
+      <rect x="9" y="2" width="1" height="1" fill="#222"/>
+      <rect x="7" y="4" width="2" height="1" fill="#c8a070"/>
+    </svg>`,
+    // 4: Caballero — armadura, espada
+    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
+      <rect x="6" y="1" width="4" height="4" fill="#ddc090"/>
+      <rect x="5" y="0" width="6" height="3" fill="#707080"/>
+      <rect x="5" y="5" width="6" height="5" fill="#8888cc"/>
+      <rect x="4" y="5" width="2" height="4" fill="#8888cc"/>
+      <rect x="10" y="5" width="2" height="4" fill="#8888cc"/>
+      <rect x="5" y="10" width="2" height="4" fill="#606080"/>
+      <rect x="9" y="10" width="2" height="4" fill="#606080"/>
+      <rect x="13" y="3" width="1" height="9" fill="#aaaacc"/>
+      <rect x="12" y="6" width="3" height="1" fill="#aaaacc"/>
+      <rect x="2" y="5" width="2" height="5" fill="#808090"/>
+      <rect x="2" y="4" width="2" height="2" fill="#aaaaaa"/>
+      <rect x="6" y="2" width="1" height="1" fill="#222"/>
+      <rect x="9" y="2" width="1" height="1" fill="#222"/>
+      <rect x="7" y="3" width="2" height="1" fill="#bb9060"/>
+    </svg>`,
+    // 5: Ministro — traje formal, insignia
+    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
+      <rect x="6" y="1" width="4" height="4" fill="#e8c898"/>
+      <rect x="5" y="5" width="6" height="5" fill="#1a1a3a"/>
+      <rect x="4" y="6" width="2" height="3" fill="#1a1a3a"/>
+      <rect x="10" y="6" width="2" height="3" fill="#1a1a3a"/>
+      <rect x="5" y="10" width="2" height="4" fill="#111128"/>
+      <rect x="9" y="10" width="2" height="4" fill="#111128"/>
+      <rect x="7" y="5" width="2" height="5" fill="#ffffff"/>
+      <rect x="7" y="6" width="2" height="1" fill="#cc2222"/>
+      <rect x="8" y="7" width="1" height="3" fill="#cc2222"/>
+      <rect x="6" y="8" width="1" height="1" fill="#f5c842"/>
+      <rect x="6" y="2" width="1" height="1" fill="#222"/>
+      <rect x="9" y="2" width="1" height="1" fill="#222"/>
+      <rect x="7" y="3" width="2" height="1" fill="#d0a878"/>
+      <rect x="5" y="0" width="6" height="2" fill="#111128"/>
+    </svg>`,
+    // 6: Presidente — banda presidencial, corona
+    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
+      <rect x="5" y="0" width="1" height="2" fill="#f5c842"/>
+      <rect x="7" y="0" width="2" height="2" fill="#f5c842"/>
+      <rect x="10" y="0" width="1" height="2" fill="#f5c842"/>
+      <rect x="4" y="1" width="8" height="2" fill="#d4a820"/>
+      <rect x="6" y="2" width="4" height="4" fill="#e8c898"/>
+      <rect x="5" y="6" width="6" height="5" fill="#0a2a6a"/>
+      <rect x="4" y="7" width="2" height="3" fill="#0a2a6a"/>
+      <rect x="10" y="7" width="2" height="3" fill="#0a2a6a"/>
+      <rect x="5" y="11" width="2" height="4" fill="#081840"/>
+      <rect x="9" y="11" width="2" height="4" fill="#081840"/>
+      <rect x="6" y="6" width="4" height="5" fill="#f5f5f5"/>
+      <rect x="6" y="7" width="4" height="1" fill="#f5c842"/>
+      <rect x="6" y="8" width="1" height="3" fill="#cc2222"/>
+      <rect x="9" y="8" width="1" height="3" fill="#0a8a0a"/>
+      <rect x="6" y="3" width="1" height="1" fill="#222"/>
+      <rect x="9" y="3" width="1" height="1" fill="#222"/>
+      <rect x="7" y="5" width="2" height="1" fill="#d0a878"/>
+    </svg>`,
+  ];
+  return sprites[Math.min(idx,6)];
+}
 
-function todayXP() { return HABITS.reduce((s,h) => S.checked[h.id] ? s+h.xp : s, 0); }
-function todayBaro() { return HABITS.reduce((s,h) => S.checked[h.id] ? s+h.baro : s, 0); }
-function todayHP() { return HABITS.reduce((s,h) => S.checked[h.id] ? s+h.hp : s, 0); }
-
-function checkAutoReset() {
+/* ════════════════════════════════
+   AUTO RESET
+════════════════════════════════ */
+function checkAutoReset(){
   const today = new Date().toDateString();
-  if (S.lastReset !== today) {
+  if(S.lastReset !== today){
+    // Check if yesterday was active for streak
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    const yStr = yesterday.toDateString();
+    const wasActiveYesterday = S.lastActiveDay === yStr;
+    if(!wasActiveYesterday && S.streak > 0) S.streak = 0;
     S.checked = {};
     S.shopBought = {};
     S.lastReset = today;
@@ -494,232 +645,260 @@ function checkAutoReset() {
   }
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._to);
-  t._to = setTimeout(() => t.classList.remove('show'), 2400);
-}
+/* ════════════════════════════════
+   RENDER
+════════════════════════════════ */
+function render(){
+  const stageIdx = getStageIdx();
+  const stage = STAGES[stageIdx];
+  const nextStage = STAGES[Math.min(stageIdx+1, STAGES.length-1)];
+  const hpPct = Math.max(0, Math.min(100, S.hp));
+  const hpColor = S.hp > 60 ? 'var(--green)' : S.hp > 30 ? 'var(--gold)' : 'var(--red)';
 
-function flashLevel() {
-  const f = document.getElementById('lvFlash');
-  f.classList.add('show');
-  setTimeout(() => f.classList.remove('show'), 600);
-}
+  // Header
+  document.getElementById('hdr-sub').textContent = `NIVEL ${stageIdx+1} — ${stage.name}`;
+  document.getElementById('hdr-sucres').textContent = S.sucres;
 
-function renderProfile() {
-  const lv = globalLevel();
-  const gxp = globalXP();
-  const lvXP = gxp % 100;
-  const pct = lvXP;
-  const anyDead = Object.values(S.areas).some(a => a.hp <= 0);
-  const av = AVATARS[Math.min(lv,10)];
+  // Sprite
+  document.getElementById('char-sprite').innerHTML = sprite(stageIdx);
 
-  document.getElementById('avatar').textContent = av;
-  document.getElementById('hdr-avatar').textContent = av;
-  document.getElementById('char-name').textContent = 'MI PERSONAJE';
-  document.getElementById('char-title').textContent = 'Nivel '+lv+' — '+titleFor(lv);
-  document.getElementById('hdr-level').textContent = 'NIV. '+lv+' — '+titleFor(lv).toUpperCase();
-  document.getElementById('hdr-baro').textContent = globalBaro();
-  document.getElementById('xp-label').textContent = lvXP+' / 100 XP ('+pct+'%)';
-  document.getElementById('xp-fill').style.width = pct+'%';
-  document.getElementById('died-banner').style.display = anyDead ? 'block' : 'none';
-  const st = document.getElementById('char-status');
-  if (anyDead) {
-    st.textContent = '☠ YOU DIED';
-    st.className = 'char-status status-dead';
+  // Char info
+  document.getElementById('char-stage').textContent = `ETAPA ${stageIdx+1} DE 7`;
+  document.getElementById('char-name').textContent = stage.name;
+  document.getElementById('streak-num').textContent = S.streak;
+
+  // HP
+  document.getElementById('hp-label').textContent = `${Math.max(0,S.hp)} / 100`;
+  document.getElementById('hp-fill').style.width = hpPct + '%';
+  document.getElementById('hp-fill').style.background = hpColor;
+
+  // Stats
+  document.getElementById('stat-xp').textContent = S.xp;
+  document.getElementById('stat-sc').textContent = S.sucres;
+  document.getElementById('shop-sc').textContent = S.sucres;
+
+  // Today XP
+  let todayXP = 0;
+  ALL_HABITS.forEach(h=>{ if(S.checked[h.id]) todayXP += h.xp; });
+  document.getElementById('stat-today').textContent = (todayXP>=0?'+':'')+todayXP+' XP';
+
+  // XP bar to next stage
+  const curReq = stage.xpReq;
+  const nxtReq = stageIdx < STAGES.length-1 ? nextStage.xpReq : STAGES[STAGES.length-1].xpReq;
+  const xpInStage = Math.max(0, S.xp - curReq);
+  const xpNeeded = nxtReq - curReq;
+  const xpPct = stageIdx >= STAGES.length-1 ? 100 : Math.min(100, (xpInStage/xpNeeded)*100);
+  document.getElementById('xp-fill').style.width = xpPct+'%';
+  document.getElementById('xp-next-label').textContent =
+    stageIdx >= STAGES.length-1 ? 'MAXIMO NIVEL' : `${S.xp} / ${nxtReq} XP`;
+
+  // Stage dots
+  const dotsEl = document.getElementById('stage-dots-row');
+  dotsEl.innerHTML = STAGES.map((st,i)=>{
+    const cls = i < stageIdx ? 'dot on' : i === stageIdx ? 'dot current' : 'dot';
+    return `<div class="${cls}" title="${st.name}"></div>`;
+  }).join('') + `<span class="dot-label">${stage.name}</span>`;
+
+  // YOU DIED
+  if(S.hp <= 0){
+    document.getElementById('char-name').textContent = '☠ YOU DIED';
+    document.getElementById('char-name').style.color = 'var(--red)';
   } else {
-    st.textContent = '▶ Vivo y en pie';
-    st.className = 'char-status status-alive';
+    document.getElementById('char-name').style.color = '';
   }
 
-  const txp = todayXP(), tbaro = todayBaro(), thp = todayHP();
-  ['day-xp','day-xp2'].forEach(id => {
-    const el = document.getElementById(id);
-    el.textContent = (txp >= 0 ? '+' : '') + txp;
-  });
-  ['day-baro','day-baro2'].forEach(id => {
-    document.getElementById(id).textContent = (tbaro >= 0 ? '+' : '') + tbaro;
-  });
-  ['day-hp','day-hp2'].forEach(id => {
-    const el = document.getElementById(id);
-    el.textContent = (thp >= 0 ? '+' : '') + thp;
-    el.className = 'day-card-val ' + (thp < 0 ? 'val-hp-neg' : 'val-hp-pos');
-  });
+  renderHabits();
+  renderShop();
+  renderStagesTable();
 }
 
-function renderStats() {
-  let html = '';
-  AREAS.forEach(a => {
-    const st = S.areas[a.id];
-    const lv = levelFor(st.xp);
-    const lvXP = st.xp % 100;
-    const hpPct = Math.max(0, Math.min(100, (st.hp/1000)*100));
-    const hpColor = st.hp > 600 ? 'var(--green)' : st.hp > 250 ? 'var(--gold)' : 'var(--red)';
-    let squares = '';
-    const sq = Math.floor(lvXP / 10);
-    for (let i = 0; i < 10; i++) squares += `<div class="sq${i<sq?' on':''}"></div>`;
-
-    html += `<div class="stat-row">
-      <div>
-        <div class="stat-top">
-          <span class="stat-icon">${a.icon}</span>
-          <span class="stat-name">${a.name}</span>
-          <span class="stat-lv">Nv.${lv}</span>
-        </div>
-        <div class="stat-nums">
-          <span>⚡ ${st.xp} XP</span>
-          <span style="display:flex;align-items:center;gap:4px">
-            ❤️ <div class="stat-hp-bar"><div class="stat-hp-fill" style="width:${hpPct}%;background:${hpColor}"></div></div> ${st.hp}
-          </span>
-          <span style="color:var(--gold)">💰 ${st.baro}</span>
-        </div>
-        <div class="prog-squares">${squares}</div>
-        <div style="font-size:10px;color:var(--text2);margin-top:3px">${lvXP}/100 XP para nivel ${lv+1}</div>
-      </div>
-    </div>`;
-  });
-  document.getElementById('stats-list').innerHTML = html;
-}
-
-function renderHabits() {
-  function makeHabit(h) {
+function renderHabits(){
+  function card(h, isNeg){
     const done = S.checked[h.id];
-    const row_cls = done ? (h.neg ? 'habit-item done-neg' : 'habit-item done-pos') : 'habit-item';
-    const cb_cls = done ? (h.neg ? 'cb on-neg' : 'cb on-pos') : 'cb';
-    let tags = '';
-    if (h.xp !== 0) tags += `<span class="tag ${h.xp>0?'tag-xp':'tag-xp-neg'}">${h.xp>0?'+':''}${h.xp} XP</span>`;
-    if (h.hp !== 0) tags += `<span class="tag ${h.hp>0?'tag-hp':'tag-hp-neg'}">${h.hp>0?'+':''}${h.hp} HP</span>`;
-    if (h.baro !== 0) tags += `<span class="tag tag-baro">${h.baro>0?'+':''}${h.baro} Baros</span>`;
-    const area = AREAS.find(a => a.id === h.area);
-    tags += `<span class="tag tag-area">${area?area.icon:''} ${area?area.name:''}</span>`;
-    return `<div class="${row_cls}" onclick="toggleHabit('${h.id}')">
-      <div class="${cb_cls}"><span class="cb-check">✓</span></div>
-      <div class="habit-body">
+    const doneCls = done ? (isNeg ? 'done-neg' : 'done-pos') : '';
+    let pts = '';
+    if(h.xp!==0) pts+=`<span class="hpt ${h.xp>0?'hpt-xp':'hpt-xp'}">${h.xp>0?'+':''}${h.xp} XP</span>`;
+    if(h.hp!==0) pts+=`<span class="hpt ${h.hp>0?'hpt-hp':'hpt-hp-neg'}">${h.hp>0?'+':''}${h.hp} HP</span>`;
+    if(h.sc!==0) pts+=`<span class="hpt ${h.sc>0?'hpt-sc':'hpt-sc-neg'}">${h.sc>0?'+':''}${h.sc} S/</span>`;
+    return `<div class="habit-card ${doneCls}" onclick="toggleHabit('${h.id}')">
+      <div>
+        <span class="habit-icon">${h.icon}</span>
         <div class="habit-name">${h.name}</div>
-        <div class="habit-tags">${tags}</div>
       </div>
+      <div class="habit-pts">${pts}</div>
+      <div class="habit-check">${done?'✓':''}</div>
     </div>`;
   }
-  document.getElementById('pos-habits').innerHTML = HABITS.filter(h=>!h.neg).map(makeHabit).join('');
-  document.getElementById('neg-habits').innerHTML = HABITS.filter(h=>h.neg).map(makeHabit).join('');
+  document.getElementById('pos-grid').innerHTML = HABITS_POS.map(h=>card(h,false)).join('');
+  document.getElementById('neg-grid').innerHTML = HABITS_NEG.map(h=>card(h,true)).join('');
 }
 
-function renderShop() {
-  const total = globalBaro();
-  document.getElementById('shop-baro-total').textContent = total;
-  let html = '';
-  SHOP.forEach(item => {
+function renderShop(){
+  let html='';
+  SHOP_ITEMS.forEach(item=>{
     const bought = S.shopBought[item.id];
-    const canAfford = total >= item.price;
-    let meta = `<span class="shop-price">${item.price} Baros</span>`;
-    if (item.hp !== 0) meta += ` · <span class="${item.hp>0?'shop-effect-pos':'shop-effect-neg'}">${item.hp>0?'+':''}${item.hp} HP</span>`;
-    if (item.xpBonus) meta += ` · <span style="color:var(--purple-light)">+${item.xpBonus} XP</span>`;
-    let btnClass, btnText;
-    if (bought) { btnClass = 'buy-btn buy-btn-done'; btnText = '✓ CANJEADO'; }
-    else if (canAfford) { btnClass = 'buy-btn buy-btn-ready'; btnText = 'COMPRAR'; }
-    else { btnClass = 'buy-btn buy-btn-cant'; btnText = 'SIN BAROS'; }
-    html += `<div class="shop-item">
+    const canAfford = S.sucres >= item.price;
+    let meta = `<span class="shop-price">${item.price} S/</span>`;
+    if(item.hp!==0) meta+=` · <span class="${item.hp>0?'shop-eff-pos':'shop-eff-neg'}">${item.hp>0?'+':''}${item.hp} HP</span>`;
+    if(item.xpBonus) meta+=` · <span style="color:var(--purpleL)">+${item.xpBonus} XP</span>`;
+    let btnCls, btnTxt;
+    if(bought){ btnCls='buy-btn btn-done'; btnTxt='✓ CANJEADO'; }
+    else if(canAfford){ btnCls='buy-btn btn-ready'; btnTxt='COMPRAR'; }
+    else{ btnCls='buy-btn btn-cant'; btnTxt='SIN S/'; }
+    html+=`<div class="shop-item">
       <div class="shop-emoji">${item.icon}</div>
-      <div class="shop-body">
-        <div class="shop-name">${item.name}</div>
-        <div class="shop-meta">${meta}</div>
-      </div>
-      <button class="${btnClass}" ${(bought||!canAfford)?'disabled':''} onclick="buyItem('${item.id}')">${btnText}</button>
+      <div class="shop-body"><div class="shop-name">${item.name}</div><div class="shop-meta">${meta}</div></div>
+      <button class="${btnCls}" ${(bought||!canAfford)?'disabled':''} onclick="buyItem('${item.id}')">${btnTxt}</button>
     </div>`;
   });
   document.getElementById('shop-list').innerHTML = html;
 }
 
-function renderTitles() {
-  const lv = globalLevel();
-  let html = '<tr><th>NIV</th><th>XP</th><th>TITULO</th></tr>';
-  Object.entries(TITLES).forEach(([l,t]) => {
-    const lvn = parseInt(l);
-    const xpReq = (lvn-1)*100;
-    const cls = lvn === lv ? 'current-lv' : '';
-    html += `<tr class="${cls}"><td>${lvn}${lvn===lv?' ◀':''}</td><td>${xpReq}+</td><td>${t}</td></tr>`;
+function renderStagesTable(){
+  const idx = getStageIdx();
+  let html='<tr><th>Etapa</th><th>Nombre</th><th>XP</th><th>Racha</th></tr>';
+  STAGES.forEach((st,i)=>{
+    const cls = i===idx ? 'cur' : '';
+    html+=`<tr class="${cls}"><td>${i+1}${i===idx?' ◀':''}</td><td>${st.name}</td><td>${st.xpReq}+</td><td>${st.streakReq}d</td></tr>`;
   });
-  document.getElementById('titles-table').innerHTML = html;
+  document.getElementById('stages-tbl').innerHTML = html;
 }
 
-function toggleHabit(id) {
-  const h = HABITS.find(x => x.id === id);
-  if (!h) return;
+/* ════════════════════════════════
+   INTERACTIONS
+════════════════════════════════ */
+function toggleHabit(id){
+  const h = ALL_HABITS.find(x=>x.id===id);
+  if(!h) return;
   const was = S.checked[id];
+  const prevStage = getStageIdx();
+
   S.checked[id] = !was;
   const mul = was ? -1 : 1;
-  const area = S.areas[h.area];
-  const prevLv = globalLevel();
-  area.xp = Math.max(0, area.xp + h.xp * mul);
-  area.hp = Math.max(0, Math.min(9999, area.hp + h.hp * mul));
-  area.baro = Math.max(0, area.baro + h.baro * mul);
-  save();
-  const newLv = globalLevel();
-  if (!was) {
-    let msg = '';
-    if (h.xp !== 0) msg += (h.xp>0?'+':'')+h.xp+' XP  ';
-    if (h.hp !== 0) msg += (h.hp>0?'+':'')+h.hp+' HP  ';
-    if (h.baro !== 0) msg += '+'+h.baro+' Baros';
-    if (msg) showToast(msg.trim());
-    if (newLv > prevLv) { flashLevel(); showToast('⭐ LEVEL UP! Nivel '+newLv+' — '+titleFor(newLv)); }
+
+  S.hp = Math.max(0, Math.min(100, S.hp + h.hp*mul));
+  S.xp = Math.max(0, S.xp + h.xp*mul);
+  S.sucres = Math.max(0, S.sucres + h.sc*mul);
+
+  // Streak: mark today as active if any positive done
+  if(!was && !h.id.startsWith('n')){
+    S.lastActiveDay = new Date().toDateString();
+    // Check streak continuity
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    if(S.lastActiveDay === new Date().toDateString()){
+      // first positive of today
+      const prevActiveWasYesterday = true; // simplified: trust stored streak
+      if(S.streak === 0 || S.lastReset !== new Date().toDateString()){
+        S.streak++;
+      }
+    }
   }
-  renderAll();
+
+  save();
+
+  // Floating numbers animation
+  if(!was){
+    const el = document.querySelector(`.habit-card[onclick="toggleHabit('${id}')"]`);
+    if(el){
+      const rect = el.getBoundingClientRect();
+      if(h.xp!==0) spawnFloat(rect.left+rect.width*.3, rect.top+rect.height*.3,
+        (h.xp>0?'+':'')+h.xp+' XP', h.xp>0?'var(--purpleL)':'var(--red)');
+      if(h.sc!==0) spawnFloat(rect.left+rect.width*.6, rect.top+rect.height*.3,
+        (h.sc>0?'+':'')+h.sc+' S/', h.sc>0?'var(--gold)':'var(--red)');
+      if(h.hp!==0) spawnFloat(rect.left+rect.width*.5, rect.top,
+        (h.hp>0?'+':'')+h.hp+' HP', h.hp>0?'var(--green)':'var(--red)');
+    }
+  }
+
+  const newStage = getStageIdx();
+  if(newStage > prevStage) showLevelUp(newStage);
+  else toast(!was ? (h.xp>0?'✓ '+h.name:'⚠ '+h.name) : 'Desmarcado');
+
+  render();
 }
 
-function buyItem(id) {
-  const item = SHOP.find(x => x.id === id);
-  if (!item || S.shopBought[id]) return;
-  const total = globalBaro();
-  if (total < item.price) { showToast('Sin suficientes Baros'); return; }
-  const area = S.areas[item.area];
-  area.baro = Math.max(0, area.baro - item.price);
-  if (item.hp !== 0) area.hp = Math.max(0, Math.min(9999, area.hp + item.hp));
-  if (item.xpBonus) area.xp += item.xpBonus;
+function spawnFloat(x, y, text, color){
+  const el = document.createElement('div');
+  el.className = 'float-num';
+  el.textContent = text;
+  el.style.left = x+'px';
+  el.style.top = y+'px';
+  el.style.color = color;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 950);
+}
+
+function buyItem(id){
+  const item = SHOP_ITEMS.find(x=>x.id===id);
+  if(!item || S.shopBought[id]) return;
+  if(S.sucres < item.price){ toast('Sin suficientes sucres'); return; }
+  S.sucres -= item.price;
+  if(item.hp!==0) S.hp = Math.max(0, Math.min(100, S.hp+item.hp));
+  if(item.xpBonus) S.xp += item.xpBonus;
   S.shopBought[id] = true;
   save();
-  showToast('Canjeado: ' + item.name);
-  renderAll();
+  toast('Canjeado: '+item.name);
+  render();
 }
 
-function resetDay(manual) {
-  S.checked = {};
-  S.shopBought = {};
-  S.lastReset = new Date().toDateString();
-  save();
-  if (manual) showToast('Checklist reseteado — Nuevo dia!');
-  renderAll();
+function showLevelUp(stageIdx){
+  const el = document.getElementById('lvup');
+  document.getElementById('lvup-l1').textContent = '⭐ EVOLUCION ⭐';
+  document.getElementById('lvup-l2').textContent = STAGES[stageIdx].name;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2200);
 }
 
-function hardReset() {
-  if (!confirm('Esto borra TODO tu progreso. ¿Estas seguro?')) return;
-  S = defaultState();
-  save();
-  showToast('Juego reiniciado');
-  renderAll();
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2000);
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    const tabs = ['perfil','habitos','tienda','info'];
-    t.classList.toggle('active', tabs[i] === tab);
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active',['inicio','tienda'][i]===tab);
   });
-  document.querySelectorAll('.screen').forEach(s => {
-    s.classList.toggle('active', s.id === 'screen-'+tab);
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.toggle('active',s.id==='screen-'+tab);
   });
 }
 
-function renderAll() {
-  renderProfile();
-  renderStats();
-  renderHabits();
-  renderShop();
-  renderTitles();
+function openSettings(){ document.getElementById('settings-page').classList.add('open'); renderStagesTable(); }
+function closeSettings(){ document.getElementById('settings-page').classList.remove('open'); }
+
+function resetDay(){
+  if(!confirm('¿Resetear el checklist de hoy?')) return;
+  S.checked={}; S.shopBought={}; S.lastReset=new Date().toDateString();
+  save(); closeSettings(); toast('Checklist reseteado'); render();
+}
+function hardReset(){
+  if(!confirm('¿Borrar TODO tu progreso? Esta acción es irreversible.')) return;
+  S=defaultState(); save(); closeSettings(); toast('Juego reiniciado'); render();
 }
 
+/* ════════════════════════════════
+   STREAK LOGIC (on open)
+════════════════════════════════ */
+function initStreak(){
+  const today = new Date().toDateString();
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  const yStr = yesterday.toDateString();
+  // If first open today and last active was NOT yesterday, reset streak
+  if(S.lastReset === today) return; // already reset today, handled by checkAutoReset
+  if(S.lastActiveDay !== yStr && S.lastActiveDay !== today){
+    S.streak = 0; save();
+  }
+}
+
+/* ════════════════════════════════
+   INIT
+════════════════════════════════ */
 checkAutoReset();
-renderAll();
+initStreak();
+render();
 </script>
 </body>
 </html>
