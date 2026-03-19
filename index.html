@@ -10,311 +10,231 @@
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:       #080810;
-  --bg2:      #10101e;
-  --bg3:      #181828;
-  --bg4:      #1e1e32;
-  --border:   #2a2a45;
-  --border2:  #3a3a60;
+  --bg:       #07070f;
+  --bg2:      #0f0f1e;
+  --bg3:      #171728;
+  --bg4:      #1e1e35;
+  --border:   #252540;
+  --border2:  #353560;
   --purple:   #6c47d4;
   --purpleL:  #9b72ff;
   --purpleLL: #c4a8ff;
   --gold:     #f5c842;
-  --goldD:    #b89020;
+  --goldD:    #a88020;
   --green:    #2ed573;
   --greenD:   #1a8a48;
   --red:      #ff4757;
-  --redD:     #c0392b;
+  --redD:     #992030;
   --cyan:     #00e5ff;
+  --orange:   #ff8c00;
   --text:     #e8e8f8;
-  --text2:    #7878aa;
-  --text3:    #4a4a78;
+  --text2:    #7070a0;
+  --text3:    #404070;
   --pixel:    'Press Start 2P', monospace;
   --vt:       'VT323', monospace;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
+  --st:       env(safe-area-inset-top,0px);
+  --sb:       env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg);height:100%}
-body{font-family:var(--vt);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:18px}
+html,body{background:var(--bg);color:var(--text);font-family:var(--vt);font-size:18px;min-height:100vh;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:8000}
 
-/* scanlines */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:9000}
+/* ─── HEADER ─── */
+.hdr{position:sticky;top:0;z-index:600;background:var(--bg2);border-bottom:2px solid var(--purple);padding:10px 14px;padding-top:calc(10px + var(--st));display:flex;align-items:center;gap:10px}
+.hdr-title{font-family:var(--pixel);font-size:8px;color:var(--purpleL);flex:1;line-height:1.6}
+.hdr-title small{display:block;font-size:6px;color:var(--text2);margin-top:2px}
+.hdr-sucres{display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--goldD);border-radius:4px;padding:5px 10px;font-family:var(--pixel);font-size:9px;color:var(--gold);cursor:default}
+.hdr-gear{width:34px;height:34px;border-radius:4px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0}
 
-/* ── HEADER ── */
-.header{
-  position:sticky;top:0;z-index:500;
-  background:var(--bg2);
-  border-bottom:2px solid var(--purple);
-  padding:10px 16px;
-  padding-top:calc(10px + var(--safe-top));
-  display:flex;align-items:center;gap:10px;
-}
-.hdr-title{font-family:var(--pixel);font-size:8px;color:var(--purpleL);flex:1}
-.hdr-title span{display:block;font-size:6px;color:var(--text2);margin-top:3px}
-.hdr-sucres{
-  display:flex;align-items:center;gap:5px;
-  background:var(--bg3);border:1px solid var(--goldD);
-  border-radius:4px;padding:5px 10px;
-  font-family:var(--pixel);font-size:9px;color:var(--gold);
-}
-.hdr-gear{
-  width:34px;height:34px;border-radius:4px;
-  background:var(--bg3);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;cursor:pointer;
-}
-
-/* ── TABS ── */
-.tabs{
-  display:flex;background:var(--bg2);
-  border-bottom:2px solid var(--border);
-  position:sticky;top:calc(54px + var(--safe-top));z-index:400;
-}
-.tab{
-  flex:1;padding:11px 4px;text-align:center;
-  font-family:var(--pixel);font-size:8px;color:var(--text2);
-  cursor:pointer;border-bottom:3px solid transparent;
-  transition:all .2s;
-}
+/* ─── TABS ─── */
+.tabs{display:flex;background:var(--bg2);border-bottom:2px solid var(--border);position:sticky;top:calc(56px + var(--st));z-index:500}
+.tab{flex:1;padding:11px 4px;text-align:center;font-family:var(--pixel);font-size:8px;color:var(--text2);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
 .tab.active{color:var(--purpleL);border-bottom-color:var(--purpleL)}
 
-/* ── SCREENS ── */
-.screen{display:none;padding:14px 14px calc(30px + var(--safe-bot))}
+/* ─── SCREENS ─── */
+.screen{display:none;padding:12px 13px calc(30px + var(--sb))}
 .screen.active{display:block}
 
-/* ── CHARACTER CARD ── */
-.char-card{
-  background:var(--bg2);border:1px solid var(--purple);
-  border-radius:8px;padding:16px;margin-bottom:12px;
-  position:relative;overflow:hidden;
-}
-.char-card::before{
-  content:'';position:absolute;top:-30px;right:-30px;
-  width:120px;height:120px;
-  background:radial-gradient(circle,rgba(108,71,212,.18) 0%,transparent 70%);
-}
-.char-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
-.char-sprite{
-  width:90px;height:90px;flex-shrink:0;
-  background:var(--bg3);border:2px solid var(--purple);
-  border-radius:6px;position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-}
-.char-sprite svg{image-rendering:pixelated;width:80px;height:80px}
+/* ─── CHARACTER CARD ─── */
+.char-card{background:var(--bg2);border:1px solid var(--purple);border-radius:8px;padding:14px;margin-bottom:12px;position:relative;overflow:hidden}
+.char-card::before{content:'';position:absolute;top:-40px;right:-40px;width:130px;height:130px;background:radial-gradient(circle,rgba(108,71,212,.15) 0%,transparent 70%);pointer-events:none}
+.char-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.char-sprite{width:88px;height:88px;flex-shrink:0;background:var(--bg3);border:2px solid var(--purple);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.char-sprite svg{image-rendering:pixelated}
 .char-info{flex:1;min-width:0}
-.char-stage{font-family:var(--pixel);font-size:8px;color:var(--purpleLL);margin-bottom:4px}
-.char-name-big{font-family:var(--pixel);font-size:11px;color:var(--text);margin-bottom:6px;line-height:1.4}
-.streak-badge{
-  display:inline-flex;align-items:center;gap:5px;
-  background:rgba(245,200,66,.12);border:1px solid var(--goldD);
-  border-radius:4px;padding:3px 8px;
-  font-family:var(--pixel);font-size:7px;color:var(--gold);
-}
-
-/* Stats row */
-.stats-row{display:flex;gap:8px;margin-top:10px}
-.stat-box{
-  flex:1;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:6px;padding:8px;text-align:center;
-}
-.stat-box-label{font-size:11px;color:var(--text2);margin-bottom:3px}
-.stat-box-val{font-family:var(--pixel);font-size:10px}
-.stat-val-hp{color:var(--red)}
-.stat-val-xp{color:var(--purpleL)}
-.stat-val-sc{color:var(--gold)}
+.char-stage-lbl{font-family:var(--pixel);font-size:7px;color:var(--text2);margin-bottom:3px}
+.char-name{font-family:var(--pixel);font-size:10px;color:var(--text);line-height:1.5;margin-bottom:6px}
+.streak-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.streak-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(245,200,66,.1);border:1px solid var(--goldD);border-radius:4px;padding:3px 8px;font-family:var(--pixel);font-size:7px;color:var(--gold)}
+.mult-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:3px 8px;font-family:var(--pixel);font-size:7px;color:var(--cyan)}
 
 /* HP bar */
-.hp-section{margin-top:12px}
-.hp-header{display:flex;justify-content:space-between;margin-bottom:5px}
-.hp-label{font-size:13px;color:var(--text2)}
-.hp-num{font-family:var(--pixel);font-size:9px;color:var(--red)}
-.hp-track{
-  height:14px;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:3px;overflow:hidden;
-}
-.hp-fill{
-  height:100%;border-radius:3px;
-  transition:width .5s cubic-bezier(.4,0,.2,1);
-  position:relative;
-}
-.hp-fill::after{
-  content:'';position:absolute;top:0;right:0;
-  width:6px;height:100%;background:rgba(255,255,255,.25);
-  animation:hpShimmer 1.8s ease-in-out infinite;
-}
-@keyframes hpShimmer{0%,100%{opacity:.2}50%{opacity:.8}}
+.bar-row{margin-top:10px}
+.bar-hdr{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.bar-lbl{color:var(--text2)}
+.bar-val{font-family:var(--pixel);font-size:8px}
+.bar-track{height:14px;background:var(--bg3);border:1px solid var(--border2);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1);position:relative}
+.bar-fill::after{content:'';position:absolute;top:0;right:0;width:5px;height:100%;background:rgba(255,255,255,.2);animation:shimmer 2s ease-in-out infinite}
+@keyframes shimmer{0%,100%{opacity:.1}50%{opacity:.6}}
 
-/* XP bar */
-.xp-section{margin-top:8px}
-.xp-track{
-  height:8px;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:2px;overflow:hidden;
-}
-.xp-fill{
-  height:100%;background:linear-gradient(90deg,var(--purple),var(--purpleL));
-  border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);
-}
+/* Stats */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:10px}
+.stat-box{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:8px;text-align:center}
+.stat-lbl{font-size:11px;color:var(--text2);margin-bottom:3px}
+.stat-val{font-family:var(--pixel);font-size:9px}
+.sv-xp{color:var(--purpleL)}
+.sv-sc{color:var(--gold)}
+.sv-today{color:var(--cyan);font-size:8px}
 
-/* Stage progress dots */
-.stage-dots{display:flex;gap:4px;margin-top:8px;align-items:center}
-.dot{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--bg4);border:1px solid var(--border2);
-  transition:all .3s;
-}
-.dot.on{background:var(--purpleL);border-color:var(--purpleL);box-shadow:0 0 6px var(--purple)}
-.dot.current{background:var(--gold);border-color:var(--gold);box-shadow:0 0 6px var(--gold)}
-.dot-label{font-size:10px;color:var(--text2);margin-left:4px}
+/* XP bar to next stage */
+.xp-next{margin-top:10px}
+.xp-hdr{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:4px}
+.xp-track{height:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:2px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--purpleL));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1)}
 
-/* ── HABITS GRID ── */
-.section-hdr{
-  font-family:var(--pixel);font-size:7px;color:var(--text2);
-  letter-spacing:.1em;margin:16px 0 10px;
-  display:flex;align-items:center;gap:8px;
-}
-.section-hdr::after{content:'';flex:1;height:1px;background:var(--border)}
-.section-hdr.pos{color:var(--green)}
-.section-hdr.neg{color:var(--red)}
+/* Stage dots */
+.stage-dots{display:flex;gap:4px;justify-content:center;margin-top:10px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);transition:all .3s;flex-shrink:0}
+.dot.done{background:var(--purpleL);border-color:var(--purpleL)}
+.dot.cur{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+.dot-name{font-size:11px;color:var(--text2);margin-left:5px}
 
-.habits-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
-.habit-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:8px;padding:12px 10px;
-  cursor:pointer;position:relative;overflow:hidden;
-  transition:transform .1s,border-color .2s,background .2s;
-  -webkit-user-select:none;min-height:80px;
-  display:flex;flex-direction:column;justify-content:space-between;
-}
-.habit-card:active{transform:scale(.96)}
-.habit-card.done-pos{background:rgba(46,213,115,.09);border-color:rgba(46,213,115,.5)}
-.habit-card.done-neg{background:rgba(255,71,87,.09);border-color:rgba(255,71,87,.5)}
-.habit-icon{font-size:22px;margin-bottom:5px;display:block}
-.habit-name{font-size:13px;font-weight:bold;line-height:1.3;margin-bottom:4px}
-.habit-pts{display:flex;gap:4px;flex-wrap:wrap}
-.hpt{font-size:11px;padding:1px 5px;border-radius:3px}
-.hpt-xp{background:rgba(155,114,255,.2);color:var(--purpleLL)}
-.hpt-hp{background:rgba(46,213,115,.15);color:#88ffbb}
-.hpt-hp-neg{background:rgba(255,71,87,.15);color:#ff9999}
-.hpt-sc{background:rgba(245,200,66,.15);color:var(--gold)}
-.hpt-sc-neg{background:rgba(255,71,87,.15);color:#ff9999}
-.habit-check{
-  position:absolute;top:8px;right:8px;
-  width:20px;height:20px;border-radius:4px;
-  border:2px solid var(--border2);background:var(--bg3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;transition:all .2s;
-}
-.habit-card.done-pos .habit-check{background:var(--green);border-color:var(--green);color:#000}
-.habit-card.done-neg .habit-check{background:var(--red);border-color:var(--red);color:#fff}
+/* ─── SECTION HEADER ─── */
+.sec-hdr{display:flex;align-items:center;gap:8px;margin:14px 0 9px}
+.sec-hdr-text{font-family:var(--pixel);font-size:7px;letter-spacing:.08em;white-space:nowrap}
+.sec-hdr-line{flex:1;height:1px;background:var(--border)}
+.sec-hdr-btn{font-family:var(--pixel);font-size:7px;padding:5px 9px;border-radius:4px;border:1px solid;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.sec-hdr-btn:active{transform:scale(.93)}
+.btn-achievements{background:rgba(245,200,66,.08);border-color:var(--goldD);color:var(--gold)}
 
-/* ── FLOATING NUMBERS ── */
-.float-num{
-  position:fixed;font-family:var(--pixel);font-size:10px;
-  pointer-events:none;z-index:9999;
-  animation:floatUp .9s ease-out forwards;
-}
-@keyframes floatUp{
-  0%{opacity:1;transform:translateY(0) scale(1)}
-  60%{opacity:1;transform:translateY(-50px) scale(1.1)}
-  100%{opacity:0;transform:translateY(-80px) scale(.8)}
-}
+/* ─── HABITS GRID ─── */
+.habits-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hcard{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 9px;cursor:pointer;position:relative;overflow:hidden;transition:transform .1s,border-color .2s,background .2s;-webkit-user-select:none;min-height:82px;display:flex;flex-direction:column;justify-content:space-between}
+.hcard:active{transform:scale(.95)}
+.hcard.pos-done{background:rgba(46,213,115,.08);border-color:rgba(46,213,115,.45)}
+.hcard.neg-done{background:rgba(255,71,87,.08);border-color:rgba(255,71,87,.45)}
+.hcard-icon{font-size:20px;margin-bottom:4px;display:block;line-height:1}
+.hcard-name{font-size:13px;font-weight:bold;line-height:1.3;margin-bottom:5px}
+.hcard-pts{display:flex;gap:3px;flex-wrap:wrap}
+.pt{font-size:10px;padding:1px 5px;border-radius:3px}
+.pt-xp{background:rgba(155,114,255,.18);color:var(--purpleLL)}
+.pt-hp{background:rgba(46,213,115,.14);color:#88ffbb}
+.pt-hp-neg{background:rgba(255,71,87,.14);color:#ff9999}
+.pt-sc{background:rgba(245,200,66,.14);color:var(--gold)}
+.pt-sc-neg{background:rgba(255,71,87,.14);color:#ff9999}
+.hcard-check{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:4px;border:1.5px solid var(--border2);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s}
+.hcard.pos-done .hcard-check{background:var(--green);border-color:var(--green);color:#000}
+.hcard.neg-done .hcard-check{background:var(--red);border-color:var(--red);color:#fff}
 
-/* ── SHOP ── */
-.shop-header-bar{
-  background:var(--bg2);border:1px solid var(--goldD);
-  border-radius:6px;padding:10px 14px;margin-bottom:12px;
-  display:flex;align-items:center;gap:8px;
-  font-size:14px;color:var(--text2);
-}
-.shop-sucres{font-family:var(--pixel);font-size:13px;color:var(--gold)}
-.shop-item{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:8px;padding:12px;margin-bottom:8px;
-  display:flex;align-items:center;gap:12px;
-}
-.shop-emoji{font-size:28px;flex-shrink:0;width:38px;text-align:center}
-.shop-body{flex:1;min-width:0}
-.shop-name{font-size:15px;font-weight:bold;margin-bottom:3px}
-.shop-meta{font-size:13px;color:var(--text2)}
-.shop-price{color:var(--gold);font-weight:bold}
-.shop-eff-pos{color:var(--green)}
-.shop-eff-neg{color:var(--red)}
-.buy-btn{
-  font-family:var(--pixel);font-size:8px;
-  padding:8px 10px;border-radius:5px;
-  border:1px solid;cursor:pointer;
-  transition:all .15s;white-space:nowrap;flex-shrink:0;
-}
+/* ─── FLOAT NUMBERS ─── */
+.float-num{position:fixed;font-family:var(--pixel);font-size:10px;pointer-events:none;z-index:9999;animation:floatUp .9s ease-out forwards}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-55px) scale(1.1)}100%{opacity:0;transform:translateY(-85px) scale(.7)}}
+
+/* ─── SHOP ─── */
+.shop-bal{background:var(--bg2);border:1px solid var(--goldD);border-radius:6px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.shop-bal-txt{font-size:14px;color:var(--text2)}
+.shop-bal-num{font-family:var(--pixel);font-size:13px;color:var(--gold)}
+.sitem{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px;margin-bottom:8px;display:flex;align-items:center;gap:11px}
+.sitem-ico{font-size:26px;flex-shrink:0;width:36px;text-align:center}
+.sitem-body{flex:1;min-width:0}
+.sitem-name{font-size:15px;font-weight:bold;margin-bottom:2px}
+.sitem-meta{font-size:12px;color:var(--text2)}
+.sitem-price{color:var(--gold);font-weight:bold}
+.sitem-eff-pos{color:var(--green)}
+.sitem-eff-neg{color:var(--red)}
+.buy-btn{font-family:var(--pixel);font-size:7px;padding:8px 9px;border-radius:5px;border:1px solid;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;line-height:1.4}
 .buy-btn:active{transform:scale(.93)}
-.btn-ready{background:rgba(245,200,66,.1);border-color:var(--gold);color:var(--gold)}
-.btn-cant{background:var(--bg3);border-color:var(--border);color:var(--text3);cursor:not-allowed}
-.btn-done{background:rgba(46,213,115,.1);border-color:var(--green);color:var(--green);cursor:default}
+.bb-ready{background:rgba(245,200,66,.08);border-color:var(--gold);color:var(--gold)}
+.bb-cant{background:var(--bg3);border-color:var(--border);color:var(--text3);cursor:not-allowed}
+.bb-done{background:rgba(46,213,115,.08);border-color:var(--green);color:var(--green);cursor:default}
 
-/* ── SETTINGS PAGE ── */
-.settings-page{
-  display:none;position:fixed;inset:0;
-  background:var(--bg);z-index:800;
-  padding:16px;padding-top:calc(16px + var(--safe-top));
-  overflow-y:auto;
-}
+/* ─── ACHIEVEMENTS POPUP ─── */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:700;display:none;align-items:flex-end;justify-content:center}
+.popup-overlay.open{display:flex}
+.popup-sheet{background:var(--bg2);border:1px solid var(--border2);border-radius:12px 12px 0 0;width:100%;max-height:88vh;overflow-y:auto;padding:18px 14px calc(20px + var(--sb));-webkit-overflow-scrolling:touch}
+.popup-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.popup-title{font-family:var(--pixel);font-size:9px;color:var(--gold)}
+.popup-close{font-size:22px;cursor:pointer;color:var(--text2);line-height:1}
+.popup-add-btn{font-family:var(--pixel);font-size:7px;padding:7px 12px;border-radius:5px;background:rgba(108,71,212,.15);border:1px solid var(--purple);color:var(--purpleL);cursor:pointer;margin-bottom:14px;width:100%;text-align:center}
+.popup-add-btn:active{transform:scale(.97)}
+.ach-cat-title{font-family:var(--pixel);font-size:7px;color:var(--text2);margin:12px 0 7px;letter-spacing:.08em}
+.aitem{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px;margin-bottom:7px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s}
+.aitem:active{transform:scale(.97)}
+.aitem.unlocked{background:rgba(46,213,115,.07);border-color:rgba(46,213,115,.4);cursor:default}
+.aitem-ico{font-size:22px;flex-shrink:0;width:30px;text-align:center}
+.aitem-body{flex:1;min-width:0}
+.aitem-name{font-size:14px;font-weight:bold;margin-bottom:3px}
+.aitem-desc{font-size:12px;color:var(--text2);margin-bottom:4px}
+.aitem-pts{display:flex;gap:5px}
+.aitem-check{font-size:18px;flex-shrink:0}
+.size-badge{font-size:10px;padding:2px 6px;border-radius:3px}
+.sz-sm{background:rgba(46,213,115,.12);color:var(--green)}
+.sz-md{background:rgba(0,229,255,.12);color:var(--cyan)}
+.sz-lg{background:rgba(155,114,255,.12);color:var(--purpleL)}
+.sz-ep{background:rgba(245,200,66,.12);color:var(--gold)}
+
+/* Custom achievement form */
+.add-form{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:13px;margin-bottom:12px;display:none}
+.add-form.open{display:block}
+.form-row{margin-bottom:9px}
+.form-label{font-size:12px;color:var(--text2);margin-bottom:4px;display:block}
+.form-input{width:100%;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;padding:8px 10px;color:var(--text);font-family:var(--vt);font-size:16px;outline:none}
+.form-input:focus{border-color:var(--purple)}
+.form-select{width:100%;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;padding:8px 10px;color:var(--text);font-family:var(--vt);font-size:16px;outline:none}
+.form-save{width:100%;padding:11px;font-family:var(--pixel);font-size:8px;background:rgba(108,71,212,.15);border:1px solid var(--purple);border-radius:5px;color:var(--purpleL);cursor:pointer;margin-top:4px}
+.form-save:active{transform:scale(.97)}
+
+/* ─── DEATH SCREEN ─── */
+.death-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:900;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.death-overlay.open{display:flex}
+.death-title{font-family:var(--pixel);font-size:18px;color:var(--red);margin-bottom:12px;animation:deathBlink 1s infinite}
+@keyframes deathBlink{0%,100%{opacity:1;text-shadow:0 0 20px var(--red)}50%{opacity:.5;text-shadow:none}}
+.death-skull{font-size:60px;margin-bottom:14px;animation:deathBlink 1.5s infinite}
+.death-sub{font-size:16px;color:var(--text2);margin-bottom:6px}
+.death-penalty{font-size:14px;color:var(--red);margin-bottom:24px;line-height:1.5}
+.death-btns{display:flex;flex-direction:column;gap:10px;width:100%}
+.death-btn{font-family:var(--pixel);font-size:8px;padding:14px;border-radius:6px;border:1px solid;cursor:pointer;transition:all .2s;line-height:1.6}
+.death-btn:active{transform:scale(.96)}
+.dbtn-reto{background:rgba(46,213,115,.1);border-color:var(--green);color:var(--green)}
+.dbtn-rendirse{background:rgba(255,71,87,.1);border-color:var(--red);color:var(--red)}
+.reto-input-wrap{display:none;flex-direction:column;gap:8px;width:100%}
+.reto-input-wrap.open{display:flex}
+.reto-confirm-btn{font-family:var(--pixel);font-size:8px;padding:12px;border-radius:6px;border:1px solid var(--green);background:rgba(46,213,115,.12);color:var(--green);cursor:pointer}
+
+/* ─── SETTINGS ─── */
+.settings-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:800;padding:14px;padding-top:calc(14px + var(--st));overflow-y:auto}
 .settings-page.open{display:block}
-.settings-back{
-  font-family:var(--pixel);font-size:8px;color:var(--purpleL);
-  cursor:pointer;margin-bottom:20px;display:flex;align-items:center;gap:8px;
-}
-.info-block{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:8px;padding:14px;margin-bottom:10px;
-  font-size:15px;line-height:1.8;color:var(--text2);
-}
+.settings-back{font-family:var(--pixel);font-size:8px;color:var(--purpleL);cursor:pointer;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.info-block{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:10px;font-size:15px;line-height:1.8;color:var(--text2)}
 .info-block strong{color:var(--text)}
-.info-block .title{font-family:var(--pixel);font-size:8px;color:var(--purpleL);margin-bottom:10px;display:block}
-.titles-tbl{width:100%;border-collapse:collapse;font-size:14px}
-.titles-tbl th{font-family:var(--pixel);font-size:7px;color:var(--text3);padding:6px;text-align:left;border-bottom:1px solid var(--border)}
-.titles-tbl td{padding:8px 6px;border-bottom:1px solid var(--border)}
-.titles-tbl tr.cur td{color:var(--purpleL)}
-.danger-btn{
-  width:100%;padding:14px;border-radius:6px;
-  border:1px solid;font-family:var(--pixel);font-size:8px;
-  cursor:pointer;margin-top:6px;transition:all .2s;
-}
-.dbtn-day{background:rgba(255,71,87,.08);border-color:var(--redD);color:var(--red)}
-.dbtn-all{background:rgba(100,100,100,.08);border-color:#444;color:#888;margin-top:10px}
+.ib-title{font-family:var(--pixel);font-size:7px;color:var(--purpleL);margin-bottom:9px;display:block}
+.stages-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.stages-tbl th{font-family:var(--pixel);font-size:6px;color:var(--text3);padding:5px 6px;text-align:left;border-bottom:1px solid var(--border)}
+.stages-tbl td{padding:7px 6px;border-bottom:1px solid var(--border)}
+.stages-tbl tr.cur-st td{color:var(--purpleL);background:rgba(108,71,212,.06)}
+.dng-btn{width:100%;padding:13px;border-radius:5px;font-family:var(--pixel);font-size:7px;cursor:pointer;transition:all .2s;margin-top:7px}
+.dng-day{background:rgba(255,71,87,.08);border:1px solid var(--redD);color:var(--red)}
+.dng-all{background:rgba(80,80,80,.08);border:1px solid #333;color:#666;margin-top:10px}
 
-/* ── TOAST ── */
-.toast{
-  position:fixed;bottom:calc(28px + var(--safe-bot));left:50%;
-  transform:translateX(-50%) translateY(16px);
-  background:var(--bg3);border:1px solid var(--purple);
-  border-radius:6px;padding:10px 18px;
-  font-family:var(--pixel);font-size:8px;color:var(--purpleL);
-  white-space:nowrap;z-index:9990;
-  opacity:0;transition:all .3s;pointer-events:none;
-}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* ── LEVELUP OVERLAY ── */
-.lvup{
-  position:fixed;inset:0;z-index:9995;pointer-events:none;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity .3s;
-}
+/* ─── LEVEL UP ─── */
+.lvup{position:fixed;inset:0;z-index:9990;pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
 .lvup.show{opacity:1}
-.lvup-inner{
-  font-family:var(--pixel);text-align:center;
-  text-shadow:0 0 20px var(--purpleL);
-}
-.lvup-line1{font-size:13px;color:var(--gold);display:block;margin-bottom:8px}
-.lvup-line2{font-size:9px;color:var(--purpleLL)}
+.lvup-inner{text-align:center}
+.lvup-l1{font-family:var(--pixel);font-size:14px;color:var(--gold);display:block;margin-bottom:10px;text-shadow:0 0 20px var(--gold)}
+.lvup-l2{font-family:var(--pixel);font-size:9px;color:var(--purpleLL);display:block}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:calc(24px + var(--sb));left:50%;transform:translateX(-50%) translateY(14px);background:var(--bg3);border:1px solid var(--purple);border-radius:6px;padding:9px 16px;font-family:var(--pixel);font-size:8px;color:var(--purpleL);white-space:nowrap;z-index:9980;opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<div class="header">
-  <div class="hdr-title">MI VIDA RPG <span id="hdr-sub">NIVEL 1 — MENDIGO</span></div>
-  <div class="hdr-sucres">S/ <span id="hdr-sucres">0</span></div>
+<div class="hdr">
+  <div class="hdr-title">MI VIDA RPG<small id="hdr-sub">NIV.1 — EL MENDIGO</small></div>
+  <div class="hdr-sucres">S/ <span id="hdr-sc">0</span></div>
   <div class="hdr-gear" onclick="openSettings()">⚙️</div>
 </div>
 
@@ -327,545 +247,563 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 <!-- ══ INICIO ══ -->
 <div class="screen active" id="screen-inicio">
 
-  <!-- Character Card -->
   <div class="char-card">
     <div class="char-top">
       <div class="char-sprite" id="char-sprite"></div>
       <div class="char-info">
-        <div class="char-stage" id="char-stage">ETAPA 1 DE 7</div>
-        <div class="char-name-big" id="char-name">EL MENDIGO</div>
-        <div class="streak-badge">🔥 <span id="streak-num">0</span> DIAS SEGUIDOS</div>
-        <div class="stage-dots" id="stage-dots"></div>
+        <div class="char-stage-lbl" id="char-stage-lbl">ETAPA 1 DE 7</div>
+        <div class="char-name" id="char-name">EL MENDIGO</div>
+        <div class="streak-row">
+          <div class="streak-badge">🔥 <span id="streak-num">0</span>d</div>
+          <div class="mult-badge">x<span id="mult-num">100</span>%</div>
+        </div>
       </div>
     </div>
 
-    <!-- HP -->
-    <div class="hp-section">
-      <div class="hp-header">
-        <span class="hp-label">❤️ HP — Puntos de Vida</span>
-        <span class="hp-num" id="hp-label">100 / 100</span>
+    <div class="bar-row">
+      <div class="bar-hdr">
+        <span class="bar-lbl">❤️ HP — Puntos de Vida</span>
+        <span class="bar-val" id="hp-lbl" style="color:var(--green)">100 / 100</span>
       </div>
-      <div class="hp-track"><div class="hp-fill" id="hp-fill" style="width:100%"></div></div>
+      <div class="bar-track"><div class="bar-fill" id="hp-fill" style="width:100%;background:var(--green)"></div></div>
     </div>
 
-    <!-- Stats row -->
     <div class="stats-row">
-      <div class="stat-box">
-        <div class="stat-box-label">⚡ XP</div>
-        <div class="stat-box-val stat-val-xp" id="stat-xp">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-box-label">💰 SUCRES</div>
-        <div class="stat-box-val stat-val-sc" id="stat-sc">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-box-label">📅 HOY</div>
-        <div class="stat-box-val" id="stat-today" style="color:var(--cyan);font-size:8px">+0 XP</div>
-      </div>
+      <div class="stat-box"><div class="stat-lbl">⚡ XP</div><div class="stat-val sv-xp" id="stat-xp">0</div></div>
+      <div class="stat-box"><div class="stat-lbl">💰 SUCRES</div><div class="stat-val sv-sc" id="stat-sc">0</div></div>
+      <div class="stat-box"><div class="stat-lbl">📅 HOY</div><div class="stat-val sv-today" id="stat-today">+0 XP</div></div>
     </div>
 
-    <!-- XP bar to next stage -->
-    <div class="xp-section" style="margin-top:10px">
-      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:4px">
-        <span>Progreso a siguiente etapa</span>
-        <span id="xp-next-label">0 / 300 XP</span>
-      </div>
+    <div class="xp-next">
+      <div class="xp-hdr"><span>Progreso a siguiente etapa</span><span id="xp-next-lbl">0 / 500 XP</span></div>
       <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
     </div>
 
-    <!-- Stage dots -->
-    <div class="stage-dots" id="stage-dots-row" style="margin-top:10px;justify-content:center"></div>
+    <div class="stage-dots" id="stage-dots"></div>
   </div>
 
-  <!-- Positive Habits -->
-  <div class="section-hdr pos">⚡ HABITOS POSITIVOS</div>
+  <!-- Positive habits -->
+  <div class="sec-hdr">
+    <span class="sec-hdr-text" style="color:var(--green)">⚡ HABITOS POSITIVOS</span>
+    <div class="sec-hdr-line"></div>
+    <button class="sec-hdr-btn btn-achievements" onclick="openAchievements()">🏆 LOGROS</button>
+  </div>
   <div class="habits-grid" id="pos-grid"></div>
 
-  <!-- Negative Habits -->
-  <div class="section-hdr neg" style="margin-top:8px">☠ HABITOS NEGATIVOS</div>
+  <!-- Negative habits -->
+  <div class="sec-hdr" style="margin-top:8px">
+    <span class="sec-hdr-text" style="color:var(--red)">☠ HABITOS NEGATIVOS</span>
+    <div class="sec-hdr-line"></div>
+  </div>
   <div class="habits-grid" id="neg-grid"></div>
 
 </div>
 
 <!-- ══ TIENDA ══ -->
 <div class="screen" id="screen-tienda">
-  <div class="shop-header-bar">
-    <span>💰 Sucres disponibles:</span>
-    <span class="shop-sucres" id="shop-sc">0</span>
+  <div class="shop-bal">
+    <span class="shop-bal-txt">💰 Sucres disponibles</span>
+    <span class="shop-bal-num" id="shop-sc">0</span>
   </div>
   <div id="shop-list"></div>
+</div>
+
+<!-- ══ ACHIEVEMENTS POPUP ══ -->
+<div class="popup-overlay" id="ach-popup" onclick="closeAchievementsOutside(event)">
+  <div class="popup-sheet" id="ach-sheet">
+    <div class="popup-hdr">
+      <div class="popup-title">🏆 LOGROS</div>
+      <div class="popup-close" onclick="closeAchievements()">✕</div>
+    </div>
+    <button class="popup-add-btn" onclick="toggleAddForm()">＋ AGREGAR LOGRO PERSONALIZADO</button>
+    <div class="add-form" id="add-form">
+      <div class="form-row">
+        <label class="form-label">Nombre del logro</label>
+        <input class="form-input" id="f-name" placeholder="Ej: Correr una maratón" maxlength="40">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Emoji / Icono</label>
+        <input class="form-input" id="f-icon" placeholder="🎯" maxlength="4">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Descripción breve</label>
+        <input class="form-input" id="f-desc" placeholder="Ej: Completar 42km" maxlength="60">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tamaño del logro</label>
+        <select class="form-select" id="f-size">
+          <option value="sm">Pequeño (+150 XP, +80 S/)</option>
+          <option value="md" selected>Mediano (+400 XP, +200 S/)</option>
+          <option value="lg">Grande (+800 XP, +400 S/)</option>
+          <option value="ep">Épico (+1500 XP, +750 S/)</option>
+        </select>
+      </div>
+      <button class="form-save" onclick="saveCustomAch()">GUARDAR LOGRO</button>
+    </div>
+    <div id="ach-list"></div>
+  </div>
+</div>
+
+<!-- ══ DEATH SCREEN ══ -->
+<div class="death-overlay" id="death-screen">
+  <div class="death-skull">☠️</div>
+  <div class="death-title">YOU DIED</div>
+  <div class="death-sub">Tu HP llegó a 0</div>
+  <div class="death-penalty" id="death-penalty-txt">Si te rindes perderás el 50% de tus XP y Sucres.</div>
+  <div class="death-btns" id="death-btns">
+    <button class="death-btn dbtn-reto" onclick="showRetoInput()">⚔️ CUMPLIR UN RETO<br><span style="font-size:7px;opacity:.7">Define y completa un reto para revivir sin penalización</span></button>
+    <button class="death-btn dbtn-rendirse" onclick="rendirse()">😔 RENDIRSE<br><span style="font-size:7px;opacity:.7">Pierdes 50% de XP y Sucres. Recuperas 50 HP.</span></button>
+  </div>
+  <div class="reto-input-wrap" id="reto-wrap">
+    <p style="font-size:14px;color:var(--text2);text-align:center;margin-bottom:6px">Define tu reto de regreso:</p>
+    <input class="form-input" id="reto-input" placeholder="Ej: Correr 5 km mañana" maxlength="80" style="text-align:center">
+    <button class="reto-confirm-btn" onclick="confirmarReto()">✓ CONFIRMAR RETO Y REVIVIR</button>
+    <button class="death-btn" style="border-color:var(--border);color:var(--text2);font-size:7px;padding:10px" onclick="cancelReto()">← VOLVER</button>
+  </div>
 </div>
 
 <!-- ══ SETTINGS ══ -->
 <div class="settings-page" id="settings-page">
   <div class="settings-back" onclick="closeSettings()">← VOLVER</div>
-
   <div class="info-block">
-    <span class="title">⚙ COMO FUNCIONA</span>
-    <strong>HP:</strong> Empieza en 100. Los hábitos negativos restan 5-10 HP. Si llega a 0, es game over y debes cumplir un castigo.<br>
-    <strong>XP:</strong> Se acumula con hábitos positivos. Determina tu nivel global.<br>
-    <strong>Sucres:</strong> Moneda del juego. Gánalos con positivos, piérdelos con negativos. Gástalos en la Tienda.<br>
-    <strong>Racha:</strong> Días consecutivos marcando al menos un hábito positivo.<br>
-    <strong>Evolución:</strong> Depende de XP acumulada + racha de días. ¡Las dos cosas importan!
+    <span class="ib-title">⚙ COMO FUNCIONA</span>
+    <strong>HP:</strong> Empieza en 100. Hábitos negativos restan 5-10 HP. Al llegar a 0 aparece la pantalla de muerte — cumple un reto o pierde el 50% de XP y Sucres.<br>
+    <strong>XP y Sucres:</strong> Cuanto más avanzas, el multiplicador baja. En etapa 1 ganas el 100%, en etapa 7 solo el 12%.<br>
+    <strong>Racha:</strong> Si no marcas nada un día, tu racha baja a la mitad (no a 0). Los logros siempre dan el 100%, sin multiplicador.<br>
+    <strong>Logros:</strong> Son eventos únicos de vida real. Solo se pueden marcar una vez. Generan grandes cantidades de XP y Sucres.
   </div>
-
   <div class="info-block">
-    <span class="title">🎭 LAS 7 ETAPAS</span>
-    <table class="titles-tbl" id="stages-tbl"></table>
+    <span class="ib-title">🎭 LAS 7 ETAPAS — PROGRESION A 1 ANO</span>
+    <table class="stages-tbl" id="stages-tbl"></table>
   </div>
-
   <div class="info-block" style="border-color:var(--redD)">
-    <span class="title" style="color:var(--red)">⚠ ZONA PELIGROSA</span>
-    <button class="danger-btn dbtn-day" onclick="resetDay()">RESETEAR CHECKLIST DE HOY</button>
-    <button class="danger-btn dbtn-all" onclick="hardReset()">☠ REINICIO TOTAL DEL JUEGO</button>
+    <span class="ib-title" style="color:var(--red)">⚠ ZONA PELIGROSA</span>
+    <button class="dng-btn dng-day" onclick="resetDay()">RESETEAR CHECKLIST DE HOY</button>
+    <button class="dng-btn dng-all" onclick="hardReset()">☠ REINICIO TOTAL DEL JUEGO</button>
   </div>
 </div>
 
-<!-- Level up overlay -->
-<div class="lvup" id="lvup">
-  <div class="lvup-inner">
-    <span class="lvup-line1" id="lvup-l1">¡EVOLUCION!</span>
-    <span class="lvup-line2" id="lvup-l2">NUEVA ETAPA</span>
-  </div>
-</div>
-
+<!-- Level up -->
+<div class="lvup" id="lvup"><div class="lvup-inner"><span class="lvup-l1" id="lvup-l1">⭐ EVOLUCION ⭐</span><span class="lvup-l2" id="lvup-l2">NUEVA ETAPA</span></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
-/* ════════════════════════════════
-   DATA
-════════════════════════════════ */
+/* ═══════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════ */
 const STAGES = [
-  { name:'EL MENDIGO',    xpReq:0,   streakReq:0,  color:'#888' },
-  { name:'EL VAGABUNDO',  xpReq:100, streakReq:3,  color:'#a07040' },
-  { name:'EL CAMPESINO',  xpReq:250, streakReq:7,  color:'#6aaa44' },
-  { name:'EL MERCADER',   xpReq:500, streakReq:14, color:'#c89020' },
-  { name:'EL CABALLERO',  xpReq:900, streakReq:21, color:'#8888dd' },
-  { name:'EL MINISTRO',   xpReq:1400,streakReq:30, color:'#cc5522' },
-  { name:'EL PRESIDENTE', xpReq:2000,streakReq:45, color:'#f5c842' },
+  {name:'EL MENDIGO',    xp:0,     streak:0,   mult:.100, color:'#888888'},
+  {name:'EL VAGABUNDO',  xp:500,   streak:7,   mult:.082, color:'#a07040'},
+  {name:'EL CAMPESINO',  xp:1500,  streak:21,  mult:.065, color:'#6aaa44'},
+  {name:'EL MERCADER',   xp:3500,  streak:45,  mult:.050, color:'#c89020'},
+  {name:'EL CABALLERO',  xp:7000,  streak:75,  mult:.036, color:'#8888dd'},
+  {name:'EL MINISTRO',   xp:13000, streak:120, mult:.022, color:'#cc5522'},
+  {name:'EL PRESIDENTE', xp:22000, streak:180, mult:.012, color:'#f5c842'},
 ];
 
 const HABITS_POS = [
-  {id:'h1', icon:'🏋️', name:'Ejercicio',          xp:20, hp:0,  sc:10},
-  {id:'h2', icon:'📖', name:'Leer',                xp:15, hp:5,  sc:8 },
-  {id:'h3', icon:'🧠', name:'Aprender algo nuevo', xp:25, hp:0,  sc:12},
-  {id:'h4', icon:'⚔️', name:'Mejorar habilidad',   xp:20, hp:0,  sc:10},
-  {id:'h5', icon:'🎨', name:'Crear algo',           xp:30, hp:0,  sc:15},
-  {id:'h6', icon:'🚀', name:'Avanzar negocio',      xp:50, hp:0,  sc:30},
+  {id:'h1',icon:'🏋️',name:'Ejercicio',       xp:30, hp:5,  sc:15},
+  {id:'h2',icon:'📖',name:'Leer',             xp:20, hp:3,  sc:10},
+  {id:'h3',icon:'🧠',name:'Aprender algo',    xp:35, hp:0,  sc:18},
+  {id:'h4',icon:'⚔️',name:'Mejorar habilidad',xp:28, hp:0,  sc:14},
+  {id:'h5',icon:'🚀',name:'Avanzar negocio',  xp:60, hp:0,  sc:35},
+  {id:'h6',icon:'🧘',name:'Meditación',       xp:18, hp:8,  sc:8 },
+  {id:'h7',icon:'🐕',name:'Sacar al perro',   xp:15, hp:4,  sc:6 },
 ];
 const HABITS_NEG = [
-  {id:'n1', icon:'💤', name:'Procrastinar',         xp:-8,  hp:-8,  sc:-10},
-  {id:'n2', icon:'😴', name:'Dormir menos de 6h',   xp:0,   hp:-10, sc:-5 },
-  {id:'n3', icon:'🛍️', name:'Gastar innecesario',   xp:-5,  hp:-5,  sc:-15},
-  {id:'n4', icon:'📱', name:'Redes sociales +2h',   xp:-10, hp:-7,  sc:-8 },
-  {id:'n5', icon:'🍔', name:'Comer chatarra',        xp:0,   hp:-6,  sc:-5 },
+  {id:'n1',icon:'💤',name:'Procrastinar',      xp:-8, hp:-8, sc:-10},
+  {id:'n2',icon:'😴',name:'Dormir -6h',        xp:0,  hp:-10,sc:-5 },
+  {id:'n3',icon:'🛍️',name:'Gastar innecesario',xp:-5, hp:-5, sc:-15},
+  {id:'n4',icon:'📱',name:'Redes +2h',         xp:-10,hp:-7, sc:-8 },
+  {id:'n5',icon:'🍔',name:'Comer chatarra',    xp:0,  hp:-6, sc:-5 },
 ];
 const ALL_HABITS = [...HABITS_POS, ...HABITS_NEG];
 
 const SHOP_ITEMS = [
-  {id:'s1', icon:'🎮', name:'Día de videojuegos',    price:80,  hp:10,  area:'descanso'},
-  {id:'s2', icon:'👕', name:'Comprar ropa/accesorio', price:150, hp:0,   area:'personal'},
-  {id:'s3', icon:'🧑‍🤝‍🧑',name:'Salida con amigos',    price:120, hp:15,  area:'social'},
-  {id:'s4', icon:'🍺', name:'Chelitas',               price:100, hp:-8,  area:'social'},
-  {id:'s5', icon:'🍦', name:'Day pass chatarra',      price:60,  hp:0,   area:'comida'},
-  {id:'s6', icon:'🍕', name:'Cena especial',          price:200, hp:20,  area:'familia'},
-  {id:'s7', icon:'📱', name:'Comprar un curso',       price:300, hp:0,   xpBonus:60, area:'educacion'},
-  {id:'s8', icon:'🌴', name:'Viaje / salida corta',   price:500, hp:30,  area:'experiencia'},
+  {id:'s1',icon:'🎮',name:'Día de videojuegos',    price:80,  hp:10,  xpB:0  },
+  {id:'s2',icon:'👕',name:'Comprar ropa/accesorio', price:150, hp:0,   xpB:0  },
+  {id:'s3',icon:'🧑‍🤝‍🧑',name:'Salida con amigos',  price:120, hp:15,  xpB:0  },
+  {id:'s4',icon:'🍺',name:'Chelitas',               price:100, hp:-8,  xpB:0  },
+  {id:'s5',icon:'🍦',name:'Day pass chatarra',      price:60,  hp:0,   xpB:0  },
+  {id:'s6',icon:'🍕',name:'Cena especial',          price:200, hp:20,  xpB:0  },
+  {id:'s7',icon:'📱',name:'Comprar un curso',       price:300, hp:0,   xpB:60 },
+  {id:'s8',icon:'🌴',name:'Viaje / salida corta',   price:500, hp:30,  xpB:0  },
 ];
 
-/* ════════════════════════════════
+const SIZE_MAP = {
+  sm:{label:'Pequeño', xp:150,  sc:80,  cls:'sz-sm'},
+  md:{label:'Mediano', xp:400,  sc:200, cls:'sz-md'},
+  lg:{label:'Grande',  xp:800,  sc:400, cls:'sz-lg'},
+  ep:{label:'Épico',   xp:1500, sc:750, cls:'sz-ep'},
+};
+
+const DEFAULT_ACHIEVEMENTS = [
+  {id:'a1', icon:'🏔️', name:'Subir una montaña',          desc:'Alcanza la cima', size:'lg',  done:false, custom:false},
+  {id:'a2', icon:'🎓', name:'Acabar un curso completo',   desc:'De principio a fin', size:'md', done:false, custom:false},
+  {id:'a3', icon:'🏃', name:'Correr 10K',                 desc:'Sin parar', size:'md', done:false, custom:false},
+  {id:'a4', icon:'📚', name:'Leer 10 libros',             desc:'Completos', size:'lg', done:false, custom:false},
+  {id:'a5', icon:'🌍', name:'Hacer un viaje solo',        desc:'A cualquier destino', size:'lg', done:false, custom:false},
+  {id:'a6', icon:'🧘', name:'30 días meditando seguidos', desc:'Consistencia total', size:'md', done:false, custom:false},
+  {id:'a7', icon:'💪', name:'3 meses de ejercicio',       desc:'Sin saltarse la rutina', size:'lg', done:false, custom:false},
+  {id:'a8', icon:'🚀', name:'Lanzar un producto/servicio',desc:'Tu primera venta real', size:'ep', done:false, custom:false},
+];
+
+/* ═══════════════════════════════════════
    STATE
-════════════════════════════════ */
-function defaultState(){
+═══════════════════════════════════════ */
+function defState(){
   return {
     hp:100, xp:0, sucres:0,
-    streak:0, lastActiveDay:'',
-    checked:{}, shopBought:{},
+    streak:0,
+    lastActiveDay:'',
     lastReset: new Date().toDateString(),
+    checked:{}, shopBought:{},
+    achievements: JSON.parse(JSON.stringify(DEFAULT_ACHIEVEMENTS)),
+    customAchs:[],
+    deathPending:false,
   };
 }
-let S = defaultState();
+let S = defState();
 try{ const r=localStorage.getItem('rpg_v5'); if(r) S=JSON.parse(r); }catch(e){}
+// Ensure achievements array exists for old saves
+if(!S.achievements) S.achievements = JSON.parse(JSON.stringify(DEFAULT_ACHIEVEMENTS));
+if(!S.customAchs) S.customAchs = [];
 
 function save(){ try{ localStorage.setItem('rpg_v5',JSON.stringify(S)); }catch(e){} }
 
-/* ════════════════════════════════
-   STAGE LOGIC
-════════════════════════════════ */
+/* ═══════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════ */
 function getStageIdx(){
   let idx=0;
   for(let i=STAGES.length-1;i>=0;i--){
-    if(S.xp>=STAGES[i].xpReq && S.streak>=STAGES[i].streakReq){ idx=i; break; }
+    if(S.xp>=STAGES[i].xp && S.streak>=STAGES[i].streak){ idx=i; break; }
   }
   return idx;
 }
-function getNextStageXP(){
-  const i=getStageIdx();
-  if(i>=STAGES.length-1) return STAGES[STAGES.length-1].xpReq;
-  return STAGES[i+1].xpReq;
+function getMult(){ return STAGES[getStageIdx()].mult; }
+
+function applyMult(base){
+  // Returns rounded real value after multiplier
+  return Math.max(1, Math.round(base * getMult()));
 }
 
-/* ════════════════════════════════
-   CHARACTER SPRITES (pixel art SVG)
-════════════════════════════════ */
-function sprite(idx){
-  // Each sprite is a simple pixel art SVG character
-  const sprites=[
-    // 0: Mendigo — harapos, postura encorvada
-    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
-      <rect x="6" y="1" width="4" height="4" fill="#c8a060"/>
-      <rect x="5" y="5" width="6" height="5" fill="#7a5c3a"/>
-      <rect x="4" y="6" width="2" height="3" fill="#7a5c3a"/>
-      <rect x="10" y="6" width="2" height="3" fill="#7a5c3a"/>
-      <rect x="5" y="10" width="2" height="4" fill="#5a4030"/>
-      <rect x="9" y="10" width="2" height="4" fill="#5a4030"/>
-      <rect x="3" y="1" width="2" height="2" fill="#7a5c3a"/>
-      <rect x="5" y="2" width="1" height="1" fill="#222"/>
-      <rect x="8" y="2" width="1" height="1" fill="#222"/>
-      <rect x="6" y="4" width="2" height="1" fill="#a07050"/>
-    </svg>`,
-    // 1: Vagabundo — algo de ropa mejor, sombrero
-    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
-      <rect x="4" y="0" width="8" height="2" fill="#8b6914"/>
-      <rect x="5" y="2" width="6" height="1" fill="#8b6914"/>
-      <rect x="6" y="1" width="4" height="4" fill="#d4a870"/>
-      <rect x="5" y="5" width="6" height="5" fill="#6b8c3a"/>
-      <rect x="4" y="6" width="2" height="3" fill="#6b8c3a"/>
-      <rect x="10" y="6" width="2" height="3" fill="#6b8c3a"/>
-      <rect x="5" y="10" width="2" height="4" fill="#4a3828"/>
-      <rect x="9" y="10" width="2" height="4" fill="#4a3828"/>
-      <rect x="5" y="2" width="1" height="1" fill="#222"/>
-      <rect x="8" y="2" width="1" height="1" fill="#222"/>
-      <rect x="6" y="4" width="2" height="1" fill="#b08060"/>
-    </svg>`,
-    // 2: Campesino — ropa simple, herramienta
-    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
-      <rect x="6" y="1" width="4" height="4" fill="#d4a870"/>
-      <rect x="4" y="0" width="8" height="2" fill="#c8a820"/>
-      <rect x="5" y="5" width="6" height="5" fill="#a05828"/>
-      <rect x="4" y="6" width="2" height="3" fill="#a05828"/>
-      <rect x="10" y="6" width="2" height="3" fill="#a05828"/>
-      <rect x="5" y="10" width="2" height="4" fill="#604838"/>
-      <rect x="9" y="10" width="2" height="4" fill="#604838"/>
-      <rect x="13" y="5" width="1" height="8" fill="#8b6914"/>
-      <rect x="12" y="4" width="3" height="2" fill="#888"/>
-      <rect x="6" y="2" width="1" height="1" fill="#222"/>
-      <rect x="9" y="2" width="1" height="1" fill="#222"/>
-      <rect x="7" y="4" width="2" height="1" fill="#b08060"/>
-    </svg>`,
-    // 3: Mercader — ropa elegante, bolsa de oro
-    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
-      <rect x="6" y="1" width="4" height="4" fill="#e8c090"/>
-      <rect x="5" y="0" width="6" height="2" fill="#2a2a60"/>
-      <rect x="5" y="5" width="6" height="5" fill="#4a3a80"/>
-      <rect x="4" y="6" width="2" height="3" fill="#4a3a80"/>
-      <rect x="10" y="6" width="2" height="3" fill="#4a3a80"/>
-      <rect x="5" y="10" width="2" height="4" fill="#2a2050"/>
-      <rect x="9" y="10" width="2" height="4" fill="#2a2050"/>
-      <rect x="12" y="8" width="3" height="3" fill="#d4a820"/>
-      <rect x="13" y="7" width="1" height="1" fill="#d4a820"/>
-      <rect x="5" y="6" width="6" height="1" fill="#f5c842"/>
-      <rect x="6" y="2" width="1" height="1" fill="#222"/>
-      <rect x="9" y="2" width="1" height="1" fill="#222"/>
-      <rect x="7" y="4" width="2" height="1" fill="#c8a070"/>
-    </svg>`,
-    // 4: Caballero — armadura, espada
-    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
-      <rect x="6" y="1" width="4" height="4" fill="#ddc090"/>
-      <rect x="5" y="0" width="6" height="3" fill="#707080"/>
-      <rect x="5" y="5" width="6" height="5" fill="#8888cc"/>
-      <rect x="4" y="5" width="2" height="4" fill="#8888cc"/>
-      <rect x="10" y="5" width="2" height="4" fill="#8888cc"/>
-      <rect x="5" y="10" width="2" height="4" fill="#606080"/>
-      <rect x="9" y="10" width="2" height="4" fill="#606080"/>
-      <rect x="13" y="3" width="1" height="9" fill="#aaaacc"/>
-      <rect x="12" y="6" width="3" height="1" fill="#aaaacc"/>
-      <rect x="2" y="5" width="2" height="5" fill="#808090"/>
-      <rect x="2" y="4" width="2" height="2" fill="#aaaaaa"/>
-      <rect x="6" y="2" width="1" height="1" fill="#222"/>
-      <rect x="9" y="2" width="1" height="1" fill="#222"/>
-      <rect x="7" y="3" width="2" height="1" fill="#bb9060"/>
-    </svg>`,
-    // 5: Ministro — traje formal, insignia
-    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
-      <rect x="6" y="1" width="4" height="4" fill="#e8c898"/>
-      <rect x="5" y="5" width="6" height="5" fill="#1a1a3a"/>
-      <rect x="4" y="6" width="2" height="3" fill="#1a1a3a"/>
-      <rect x="10" y="6" width="2" height="3" fill="#1a1a3a"/>
-      <rect x="5" y="10" width="2" height="4" fill="#111128"/>
-      <rect x="9" y="10" width="2" height="4" fill="#111128"/>
-      <rect x="7" y="5" width="2" height="5" fill="#ffffff"/>
-      <rect x="7" y="6" width="2" height="1" fill="#cc2222"/>
-      <rect x="8" y="7" width="1" height="3" fill="#cc2222"/>
-      <rect x="6" y="8" width="1" height="1" fill="#f5c842"/>
-      <rect x="6" y="2" width="1" height="1" fill="#222"/>
-      <rect x="9" y="2" width="1" height="1" fill="#222"/>
-      <rect x="7" y="3" width="2" height="1" fill="#d0a878"/>
-      <rect x="5" y="0" width="6" height="2" fill="#111128"/>
-    </svg>`,
-    // 6: Presidente — banda presidencial, corona
-    `<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;width:72px;height:72px">
-      <rect x="5" y="0" width="1" height="2" fill="#f5c842"/>
-      <rect x="7" y="0" width="2" height="2" fill="#f5c842"/>
-      <rect x="10" y="0" width="1" height="2" fill="#f5c842"/>
-      <rect x="4" y="1" width="8" height="2" fill="#d4a820"/>
-      <rect x="6" y="2" width="4" height="4" fill="#e8c898"/>
-      <rect x="5" y="6" width="6" height="5" fill="#0a2a6a"/>
-      <rect x="4" y="7" width="2" height="3" fill="#0a2a6a"/>
-      <rect x="10" y="7" width="2" height="3" fill="#0a2a6a"/>
-      <rect x="5" y="11" width="2" height="4" fill="#081840"/>
-      <rect x="9" y="11" width="2" height="4" fill="#081840"/>
-      <rect x="6" y="6" width="4" height="5" fill="#f5f5f5"/>
-      <rect x="6" y="7" width="4" height="1" fill="#f5c842"/>
-      <rect x="6" y="8" width="1" height="3" fill="#cc2222"/>
-      <rect x="9" y="8" width="1" height="3" fill="#0a8a0a"/>
-      <rect x="6" y="3" width="1" height="1" fill="#222"/>
-      <rect x="9" y="3" width="1" height="1" fill="#222"/>
-      <rect x="7" y="5" width="2" height="1" fill="#d0a878"/>
-    </svg>`,
-  ];
-  return sprites[Math.min(idx,6)];
-}
+function allAchs(){ return [...S.achievements, ...S.customAchs]; }
 
-/* ════════════════════════════════
-   AUTO RESET
-════════════════════════════════ */
+/* ═══════════════════════════════════════
+   AUTO-RESET (daily)
+═══════════════════════════════════════ */
 function checkAutoReset(){
   const today = new Date().toDateString();
-  if(S.lastReset !== today){
-    // Check if yesterday was active for streak
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-    const yStr = yesterday.toDateString();
-    const wasActiveYesterday = S.lastActiveDay === yStr;
-    if(!wasActiveYesterday && S.streak > 0) S.streak = 0;
-    S.checked = {};
-    S.shopBought = {};
-    S.lastReset = today;
-    save();
+  if(S.lastReset === today) return;
+  // Streak: if last active day was yesterday, keep; otherwise halve
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  if(S.lastActiveDay !== yesterday.toDateString()){
+    S.streak = Math.floor(S.streak / 2);
   }
+  S.checked = {};
+  S.shopBought = {};
+  S.lastReset = today;
+  save();
 }
 
-/* ════════════════════════════════
+/* ═══════════════════════════════════════
+   SPRITES
+═══════════════════════════════════════ */
+function sprite(i){
+  const sprites=[
+    // 0 Mendigo
+    `<svg width="80" height="80" viewBox="0 0 16 16"><rect x="6" y="1" width="4" height="4" fill="#c8a060"/><rect x="5" y="5" width="6" height="5" fill="#7a5c3a"/><rect x="4" y="6" width="2" height="3" fill="#7a5c3a"/><rect x="10" y="6" width="2" height="3" fill="#7a5c3a"/><rect x="5" y="10" width="2" height="5" fill="#5a4030"/><rect x="9" y="10" width="2" height="5" fill="#5a4030"/><rect x="3" y="0" width="3" height="2" fill="#7a5c3a"/><rect x="5" y="2" width="1" height="1" fill="#222"/><rect x="8" y="2" width="1" height="1" fill="#222"/><rect x="6" y="4" width="2" height="1" fill="#a07050"/></svg>`,
+    // 1 Vagabundo
+    `<svg width="80" height="80" viewBox="0 0 16 16"><rect x="4" y="0" width="8" height="2" fill="#8b6914"/><rect x="5" y="2" width="6" height="1" fill="#a07820"/><rect x="6" y="1" width="4" height="4" fill="#d4a870"/><rect x="5" y="5" width="6" height="5" fill="#6b8c3a"/><rect x="4" y="6" width="2" height="3" fill="#5a7830"/><rect x="10" y="6" width="2" height="3" fill="#5a7830"/><rect x="5" y="10" width="2" height="5" fill="#4a3828"/><rect x="9" y="10" width="2" height="5" fill="#4a3828"/><rect x="5" y="2" width="1" height="1" fill="#222"/><rect x="8" y="2" width="1" height="1" fill="#222"/><rect x="6" y="4" width="2" height="1" fill="#b08060"/></svg>`,
+    // 2 Campesino
+    `<svg width="80" height="80" viewBox="0 0 16 16"><rect x="4" y="0" width="8" height="2" fill="#c8a820"/><rect x="6" y="1" width="4" height="4" fill="#d4a870"/><rect x="5" y="5" width="6" height="5" fill="#a05828"/><rect x="4" y="6" width="2" height="3" fill="#904820"/><rect x="10" y="6" width="2" height="3" fill="#904820"/><rect x="5" y="10" width="2" height="5" fill="#604838"/><rect x="9" y="10" width="2" height="5" fill="#604838"/><rect x="13" y="4" width="1" height="9" fill="#8b6914"/><rect x="12" y="3" width="3" height="2" fill="#999"/><rect x="6" y="2" width="1" height="1" fill="#222"/><rect x="9" y="2" width="1" height="1" fill="#222"/><rect x="7" y="4" width="2" height="1" fill="#c09060"/></svg>`,
+    // 3 Mercader
+    `<svg width="80" height="80" viewBox="0 0 16 16"><rect x="5" y="0" width="6" height="2" fill="#2a2a60"/><rect x="6" y="1" width="4" height="4" fill="#e8c090"/><rect x="5" y="5" width="6" height="5" fill="#4a3a80"/><rect x="4" y="6" width="2" height="3" fill="#3a2a70"/><rect x="10" y="6" width="2" height="3" fill="#3a2a70"/><rect x="5" y="10" width="2" height="5" fill="#2a2050"/><rect x="9" y="10" width="2" height="5" fill="#2a2050"/><rect x="5" y="6" width="6" height="1" fill="#f5c842"/><rect x="12" y="8" width="3" height="3" fill="#d4a820"/><rect x="13" y="7" width="1" height="1" fill="#e5b830"/><rect x="6" y="2" width="1" height="1" fill="#222"/><rect x="9" y="2" width="1" height="1" fill="#222"/><rect x="7" y="4" width="2" height="1" fill="#c8a070"/></svg>`,
+    // 4 Caballero
+    `<svg width="80" height="80" viewBox="0 0 16 16"><rect x="5" y="0" width="6" height="3" fill="#707088"/><rect x="6" y="1" width="4" height="4" fill="#ddc090"/><rect x="5" y="5" width="6" height="5" fill="#8888cc"/><rect x="4" y="5" width="2" height="4" fill="#7878bb"/><rect x="10" y="5" width="2" height="4" fill="#7878bb"/><rect x="5" y="10" width="2" height="5" fill="#606080"/><rect x="9" y="10" width="2" height="5" fill="#606080"/><rect x="13" y="2" width="1" height="10" fill="#aaaacc"/><rect x="12" y="6" width="3" height="1" fill="#ccccee"/><rect x="2" y="5" width="2" height="5" fill="#808090"/><rect x="2" y="4" width="2" height="2" fill="#aaaaaa"/><rect x="6" y="2" width="1" height="1" fill="#222"/><rect x="9" y="2" width="1" height="1" fill="#222"/></svg>`,
+    // 5 Ministro
+    `<svg width="80" height="80" viewBox="0 0 16 16"><rect x="5" y="0" width="6" height="2" fill="#111128"/><rect x="6" y="1" width="4" height="4" fill="#e8c898"/><rect x="5" y="5" width="6" height="5" fill="#1a1a3a"/><rect x="4" y="6" width="2" height="3" fill="#111128"/><rect x="10" y="6" width="2" height="3" fill="#111128"/><rect x="5" y="10" width="2" height="5" fill="#0e0e22"/><rect x="9" y="10" width="2" height="5" fill="#0e0e22"/><rect x="7" y="5" width="2" height="5" fill="#f5f5f5"/><rect x="7" y="6" width="2" height="1" fill="#cc2222"/><rect x="7" y="8" width="2" height="1" fill="#cc2222"/><rect x="6" y="8" width="1" height="1" fill="#f5c842"/><rect x="6" y="2" width="1" height="1" fill="#222"/><rect x="9" y="2" width="1" height="1" fill="#222"/></svg>`,
+    // 6 Presidente
+    `<svg width="80" height="80" viewBox="0 0 16 16"><rect x="5" y="0" width="1" height="2" fill="#f5c842"/><rect x="7" y="0" width="2" height="1" fill="#f5c842"/><rect x="10" y="0" width="1" height="2" fill="#f5c842"/><rect x="4" y="1" width="8" height="2" fill="#d4a820"/><rect x="6" y="2" width="4" height="4" fill="#e8c898"/><rect x="5" y="6" width="6" height="5" fill="#0a2a6a"/><rect x="4" y="7" width="2" height="3" fill="#081e50"/><rect x="10" y="7" width="2" height="3" fill="#081e50"/><rect x="5" y="11" width="2" height="4" fill="#061540"/><rect x="9" y="11" width="2" height="4" fill="#061540"/><rect x="6" y="6" width="4" height="5" fill="#f5f5f5"/><rect x="6" y="7" width="4" height="1" fill="#f5c842"/><rect x="6" y="8" width="1" height="3" fill="#cc2222"/><rect x="9" y="8" width="1" height="3" fill="#0a8a0a"/><rect x="6" y="3" width="1" height="1" fill="#222"/><rect x="9" y="3" width="1" height="1" fill="#222"/></svg>`,
+  ];
+  return sprites[Math.min(i,6)];
+}
+
+/* ═══════════════════════════════════════
    RENDER
-════════════════════════════════ */
+═══════════════════════════════════════ */
 function render(){
-  const stageIdx = getStageIdx();
-  const stage = STAGES[stageIdx];
-  const nextStage = STAGES[Math.min(stageIdx+1, STAGES.length-1)];
+  const si = getStageIdx();
+  const st = STAGES[si];
+  const mult = Math.round(st.mult * 100);
   const hpPct = Math.max(0, Math.min(100, S.hp));
   const hpColor = S.hp > 60 ? 'var(--green)' : S.hp > 30 ? 'var(--gold)' : 'var(--red)';
+  const nextSt = STAGES[Math.min(si+1, STAGES.length-1)];
+  const xpInStage = Math.max(0, S.xp - st.xp);
+  const xpRange = nextSt.xp - st.xp;
+  const xpPct = si >= STAGES.length-1 ? 100 : Math.min(100, (xpInStage/xpRange)*100);
 
-  // Header
-  document.getElementById('hdr-sub').textContent = `NIVEL ${stageIdx+1} — ${stage.name}`;
-  document.getElementById('hdr-sucres').textContent = S.sucres;
-
-  // Sprite
-  document.getElementById('char-sprite').innerHTML = sprite(stageIdx);
-
-  // Char info
-  document.getElementById('char-stage').textContent = `ETAPA ${stageIdx+1} DE 7`;
-  document.getElementById('char-name').textContent = stage.name;
+  document.getElementById('hdr-sub').textContent = `NIV.${si+1} — ${st.name}`;
+  document.getElementById('hdr-sc').textContent = S.sucres;
+  document.getElementById('char-sprite').innerHTML = sprite(si);
+  document.getElementById('char-stage-lbl').textContent = `ETAPA ${si+1} DE 7`;
+  document.getElementById('char-name').textContent = S.hp<=0 ? '☠ YOU DIED' : st.name;
+  document.getElementById('char-name').style.color = S.hp<=0 ? 'var(--red)' : '';
   document.getElementById('streak-num').textContent = S.streak;
-
-  // HP
-  document.getElementById('hp-label').textContent = `${Math.max(0,S.hp)} / 100`;
-  document.getElementById('hp-fill').style.width = hpPct + '%';
+  document.getElementById('mult-num').textContent = mult;
+  document.getElementById('hp-lbl').textContent = `${Math.max(0,S.hp)} / 100`;
+  document.getElementById('hp-lbl').style.color = hpColor;
+  document.getElementById('hp-fill').style.width = hpPct+'%';
   document.getElementById('hp-fill').style.background = hpColor;
-
-  // Stats
   document.getElementById('stat-xp').textContent = S.xp;
   document.getElementById('stat-sc').textContent = S.sucres;
   document.getElementById('shop-sc').textContent = S.sucres;
+  document.getElementById('xp-fill').style.width = xpPct+'%';
+  document.getElementById('xp-next-lbl').textContent = si>=STAGES.length-1 ? 'MAXIMO' : `${S.xp} / ${nextSt.xp} XP`;
 
   // Today XP
-  let todayXP = 0;
-  ALL_HABITS.forEach(h=>{ if(S.checked[h.id]) todayXP += h.xp; });
-  document.getElementById('stat-today').textContent = (todayXP>=0?'+':'')+todayXP+' XP';
-
-  // XP bar to next stage
-  const curReq = stage.xpReq;
-  const nxtReq = stageIdx < STAGES.length-1 ? nextStage.xpReq : STAGES[STAGES.length-1].xpReq;
-  const xpInStage = Math.max(0, S.xp - curReq);
-  const xpNeeded = nxtReq - curReq;
-  const xpPct = stageIdx >= STAGES.length-1 ? 100 : Math.min(100, (xpInStage/xpNeeded)*100);
-  document.getElementById('xp-fill').style.width = xpPct+'%';
-  document.getElementById('xp-next-label').textContent =
-    stageIdx >= STAGES.length-1 ? 'MAXIMO NIVEL' : `${S.xp} / ${nxtReq} XP`;
+  let todayXP=0;
+  ALL_HABITS.forEach(h=>{ if(S.checked[h.id]) todayXP += applyMult(h.xp); });
+  document.getElementById('stat-today').textContent=(todayXP>=0?'+':'')+todayXP+' XP';
 
   // Stage dots
-  const dotsEl = document.getElementById('stage-dots-row');
-  dotsEl.innerHTML = STAGES.map((st,i)=>{
-    const cls = i < stageIdx ? 'dot on' : i === stageIdx ? 'dot current' : 'dot';
-    return `<div class="${cls}" title="${st.name}"></div>`;
-  }).join('') + `<span class="dot-label">${stage.name}</span>`;
-
-  // YOU DIED
-  if(S.hp <= 0){
-    document.getElementById('char-name').textContent = '☠ YOU DIED';
-    document.getElementById('char-name').style.color = 'var(--red)';
-  } else {
-    document.getElementById('char-name').style.color = '';
-  }
+  const dotsEl=document.getElementById('stage-dots');
+  dotsEl.innerHTML=STAGES.map((s,i)=>`<div class="dot ${i<si?'done':i===si?'cur':''}" title="${s.name}"></div>`).join('')+`<span class="dot-name">${st.name}</span>`;
 
   renderHabits();
   renderShop();
   renderStagesTable();
+
+  // Show death screen if HP=0 and not pending already handled
+  if(S.hp<=0 && !S.deathPending){
+    S.deathPending=true; save();
+    setTimeout(()=>document.getElementById('death-screen').classList.add('open'),400);
+  }
 }
 
 function renderHabits(){
-  function card(h, isNeg){
-    const done = S.checked[h.id];
-    const doneCls = done ? (isNeg ? 'done-neg' : 'done-pos') : '';
-    let pts = '';
-    if(h.xp!==0) pts+=`<span class="hpt ${h.xp>0?'hpt-xp':'hpt-xp'}">${h.xp>0?'+':''}${h.xp} XP</span>`;
-    if(h.hp!==0) pts+=`<span class="hpt ${h.hp>0?'hpt-hp':'hpt-hp-neg'}">${h.hp>0?'+':''}${h.hp} HP</span>`;
-    if(h.sc!==0) pts+=`<span class="hpt ${h.sc>0?'hpt-sc':'hpt-sc-neg'}">${h.sc>0?'+':''}${h.sc} S/</span>`;
-    return `<div class="habit-card ${doneCls}" onclick="toggleHabit('${h.id}')">
-      <div>
-        <span class="habit-icon">${h.icon}</span>
-        <div class="habit-name">${h.name}</div>
-      </div>
-      <div class="habit-pts">${pts}</div>
-      <div class="habit-check">${done?'✓':''}</div>
+  function card(h,isNeg){
+    const done=S.checked[h.id];
+    const cls=done?(isNeg?'neg-done':'pos-done'):'';
+    const rx=applyMult(Math.abs(h.xp));
+    const rsc=applyMult(Math.abs(h.sc));
+    let pts='';
+    if(h.xp!==0) pts+=`<span class="pt pt-xp">${h.xp>0?'+'+rx:'-'+rx} XP</span>`;
+    if(h.hp!==0) pts+=`<span class="pt ${h.hp>0?'pt-hp':'pt-hp-neg'}">${h.hp>0?'+':''}${h.hp} HP</span>`;
+    if(h.sc!==0) pts+=`<span class="pt ${h.sc>0?'pt-sc':'pt-sc-neg'}">${h.sc>0?'+'+rsc:'-'+rsc} S/</span>`;
+    return `<div class="hcard ${cls}" onclick="toggleHabit('${h.id}')">
+      <div><span class="hcard-icon">${h.icon}</span><div class="hcard-name">${h.name}</div></div>
+      <div class="hcard-pts">${pts}</div>
+      <div class="hcard-check">${done?'✓':''}</div>
     </div>`;
   }
-  document.getElementById('pos-grid').innerHTML = HABITS_POS.map(h=>card(h,false)).join('');
-  document.getElementById('neg-grid').innerHTML = HABITS_NEG.map(h=>card(h,true)).join('');
+  document.getElementById('pos-grid').innerHTML=HABITS_POS.map(h=>card(h,false)).join('');
+  document.getElementById('neg-grid').innerHTML=HABITS_NEG.map(h=>card(h,true)).join('');
 }
 
 function renderShop(){
   let html='';
   SHOP_ITEMS.forEach(item=>{
-    const bought = S.shopBought[item.id];
-    const canAfford = S.sucres >= item.price;
-    let meta = `<span class="shop-price">${item.price} S/</span>`;
-    if(item.hp!==0) meta+=` · <span class="${item.hp>0?'shop-eff-pos':'shop-eff-neg'}">${item.hp>0?'+':''}${item.hp} HP</span>`;
-    if(item.xpBonus) meta+=` · <span style="color:var(--purpleL)">+${item.xpBonus} XP</span>`;
-    let btnCls, btnTxt;
-    if(bought){ btnCls='buy-btn btn-done'; btnTxt='✓ CANJEADO'; }
-    else if(canAfford){ btnCls='buy-btn btn-ready'; btnTxt='COMPRAR'; }
-    else{ btnCls='buy-btn btn-cant'; btnTxt='SIN S/'; }
-    html+=`<div class="shop-item">
-      <div class="shop-emoji">${item.icon}</div>
-      <div class="shop-body"><div class="shop-name">${item.name}</div><div class="shop-meta">${meta}</div></div>
-      <button class="${btnCls}" ${(bought||!canAfford)?'disabled':''} onclick="buyItem('${item.id}')">${btnTxt}</button>
+    const bought=S.shopBought[item.id];
+    const can=S.sucres>=item.price;
+    let meta=`<span class="sitem-price">${item.price} S/</span>`;
+    if(item.hp!==0) meta+=` · <span class="${item.hp>0?'sitem-eff-pos':'sitem-eff-neg'}">${item.hp>0?'+':''}${item.hp} HP</span>`;
+    if(item.xpB) meta+=` · <span style="color:var(--purpleL)">+${item.xpB} XP</span>`;
+    let bc,bt;
+    if(bought){bc='buy-btn bb-done';bt='✓ CANJEADO';}
+    else if(can){bc='buy-btn bb-ready';bt='COMPRAR';}
+    else{bc='buy-btn bb-cant';bt='SIN S/';}
+    html+=`<div class="sitem">
+      <div class="sitem-ico">${item.icon}</div>
+      <div class="sitem-body"><div class="sitem-name">${item.name}</div><div class="sitem-meta">${meta}</div></div>
+      <button class="${bc}" ${(bought||!can)?'disabled':''} onclick="buyItem('${item.id}')">${bt}</button>
     </div>`;
   });
-  document.getElementById('shop-list').innerHTML = html;
+  document.getElementById('shop-list').innerHTML=html;
 }
 
 function renderStagesTable(){
-  const idx = getStageIdx();
-  let html='<tr><th>Etapa</th><th>Nombre</th><th>XP</th><th>Racha</th></tr>';
+  const si=getStageIdx();
+  let h='<tr><th>Etapa</th><th>Nombre</th><th>XP req.</th><th>Racha</th><th>Mult.</th></tr>';
   STAGES.forEach((st,i)=>{
-    const cls = i===idx ? 'cur' : '';
-    html+=`<tr class="${cls}"><td>${i+1}${i===idx?' ◀':''}</td><td>${st.name}</td><td>${st.xpReq}+</td><td>${st.streakReq}d</td></tr>`;
+    h+=`<tr class="${i===si?'cur-st':''}"><td>${i+1}${i===si?' ◀':''}</td><td>${st.name}</td><td>${st.xp.toLocaleString()}</td><td>${st.streak}d</td><td>${Math.round(st.mult*100)}%</td></tr>`;
   });
-  document.getElementById('stages-tbl').innerHTML = html;
+  document.getElementById('stages-tbl').innerHTML=h;
 }
 
-/* ════════════════════════════════
-   INTERACTIONS
-════════════════════════════════ */
-function toggleHabit(id){
-  const h = ALL_HABITS.find(x=>x.id===id);
-  if(!h) return;
-  const was = S.checked[id];
-  const prevStage = getStageIdx();
+function renderAchievements(){
+  const predefined=S.achievements;
+  const custom=S.customAchs;
+  let html='';
 
-  S.checked[id] = !was;
-  const mul = was ? -1 : 1;
-
-  S.hp = Math.max(0, Math.min(100, S.hp + h.hp*mul));
-  S.xp = Math.max(0, S.xp + h.xp*mul);
-  S.sucres = Math.max(0, S.sucres + h.sc*mul);
-
-  // Streak: mark today as active if any positive done
-  if(!was && !h.id.startsWith('n')){
-    S.lastActiveDay = new Date().toDateString();
-    // Check streak continuity
-    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-    if(S.lastActiveDay === new Date().toDateString()){
-      // first positive of today
-      const prevActiveWasYesterday = true; // simplified: trust stored streak
-      if(S.streak === 0 || S.lastReset !== new Date().toDateString()){
-        S.streak++;
-      }
-    }
+  function achHTML(a){
+    const sz=SIZE_MAP[a.size];
+    return `<div class="aitem ${a.done?'unlocked':''}" onclick="${a.done?'':'markAch(\''+a.id+'\')'}">
+      <div class="aitem-ico">${a.icon}</div>
+      <div class="aitem-body">
+        <div class="aitem-name">${a.name}</div>
+        <div class="aitem-desc">${a.desc}</div>
+        <div class="aitem-pts">
+          <span class="size-badge ${sz.cls}">${sz.label}</span>
+          <span class="pt pt-xp">+${sz.xp} XP</span>
+          <span class="pt pt-sc">+${sz.sc} S/</span>
+        </div>
+      </div>
+      <div class="aitem-check">${a.done?'✅':'⭕'}</div>
+    </div>`;
   }
 
+  const pending=predefined.filter(a=>!a.done);
+  const done=predefined.filter(a=>a.done);
+  const cpending=custom.filter(a=>!a.done);
+  const cdone=custom.filter(a=>a.done);
+
+  if(pending.length){html+='<div class="ach-cat-title">⚡ POR COMPLETAR</div>'+pending.map(achHTML).join('');}
+  if(cpending.length){html+='<div class="ach-cat-title">✏️ MIS LOGROS PERSONALES</div>'+cpending.map(achHTML).join('');}
+  if(done.length||cdone.length){
+    html+='<div class="ach-cat-title">✅ COMPLETADOS</div>';
+    html+=done.map(achHTML).join('');
+    html+=cdone.map(achHTML).join('');
+  }
+  document.getElementById('ach-list').innerHTML=html;
+}
+
+/* ═══════════════════════════════════════
+   INTERACTIONS
+═══════════════════════════════════════ */
+function toggleHabit(id){
+  if(S.hp<=0){toast('Revive primero — Pantalla de muerte');return;}
+  const h=ALL_HABITS.find(x=>x.id===id);
+  if(!h) return;
+  const was=S.checked[id];
+  const prevSi=getStageIdx();
+  S.checked[id]=!was;
+  const mul=was?-1:1;
+
+  const rxp=applyMult(Math.abs(h.xp))*(h.xp>=0?1:-1);
+  const rsc=applyMult(Math.abs(h.sc))*(h.sc>=0?1:-1);
+
+  S.hp=Math.max(0,Math.min(100,S.hp+h.hp*mul));
+  S.xp=Math.max(0,S.xp+rxp*mul);
+  S.sucres=Math.max(0,S.sucres+rsc*mul);
+
+  if(!was && !h.id.startsWith('n')){
+    const today=new Date().toDateString();
+    if(S.lastActiveDay!==today){
+      S.streak++;
+      S.lastActiveDay=today;
+    }
+  }
   save();
 
-  // Floating numbers animation
   if(!was){
-    const el = document.querySelector(`.habit-card[onclick="toggleHabit('${id}')"]`);
+    // Spawn floating numbers
+    const el=document.querySelector(`.hcard[onclick="toggleHabit('${id}')"]`);
     if(el){
-      const rect = el.getBoundingClientRect();
-      if(h.xp!==0) spawnFloat(rect.left+rect.width*.3, rect.top+rect.height*.3,
-        (h.xp>0?'+':'')+h.xp+' XP', h.xp>0?'var(--purpleL)':'var(--red)');
-      if(h.sc!==0) spawnFloat(rect.left+rect.width*.6, rect.top+rect.height*.3,
-        (h.sc>0?'+':'')+h.sc+' S/', h.sc>0?'var(--gold)':'var(--red)');
-      if(h.hp!==0) spawnFloat(rect.left+rect.width*.5, rect.top,
-        (h.hp>0?'+':'')+h.hp+' HP', h.hp>0?'var(--green)':'var(--red)');
+      const r=el.getBoundingClientRect();
+      if(h.xp!==0) spawnFloat(r.left+r.width*.25,r.top+20,(rxp>0?'+':'')+rxp+' XP',h.xp>0?'var(--purpleL)':'var(--red)');
+      if(rsc!==0) spawnFloat(r.left+r.width*.65,r.top+20,(rsc>0?'+':'')+rsc+' S/',rsc>0?'var(--gold)':'var(--red)');
+      if(h.hp!==0) spawnFloat(r.left+r.width*.45,r.top,(h.hp>0?'+':'')+h.hp+' HP',h.hp>0?'var(--green)':'var(--red)');
     }
+    const newSi=getStageIdx();
+    if(newSi>prevSi) showLevelUp(newSi);
   }
 
-  const newStage = getStageIdx();
-  if(newStage > prevStage) showLevelUp(newStage);
-  else toast(!was ? (h.xp>0?'✓ '+h.name:'⚠ '+h.name) : 'Desmarcado');
-
   render();
+
+  if(S.hp<=0 && !S.deathPending){
+    S.deathPending=true; save();
+    setTimeout(()=>document.getElementById('death-screen').classList.add('open'),500);
+  }
 }
 
-function spawnFloat(x, y, text, color){
-  const el = document.createElement('div');
-  el.className = 'float-num';
-  el.textContent = text;
-  el.style.left = x+'px';
-  el.style.top = y+'px';
-  el.style.color = color;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(), 950);
+function markAch(id){
+  let ach=S.achievements.find(a=>a.id===id)||S.customAchs.find(a=>a.id===id);
+  if(!ach||ach.done) return;
+  ach.done=true;
+  const sz=SIZE_MAP[ach.size];
+  S.xp+=sz.xp;
+  S.sucres+=sz.sc;
+  save();
+  spawnFloatCenter('+'+sz.xp+' XP  +'+sz.sc+' S/', 'var(--gold)');
+  toast('🏆 LOGRO: '+ach.name);
+  render();
+  renderAchievements();
 }
 
 function buyItem(id){
-  const item = SHOP_ITEMS.find(x=>x.id===id);
-  if(!item || S.shopBought[id]) return;
-  if(S.sucres < item.price){ toast('Sin suficientes sucres'); return; }
-  S.sucres -= item.price;
-  if(item.hp!==0) S.hp = Math.max(0, Math.min(100, S.hp+item.hp));
-  if(item.xpBonus) S.xp += item.xpBonus;
-  S.shopBought[id] = true;
+  const item=SHOP_ITEMS.find(x=>x.id===id);
+  if(!item||S.shopBought[id]) return;
+  if(S.sucres<item.price){toast('Sin suficientes sucres');return;}
+  S.sucres-=item.price;
+  if(item.hp) S.hp=Math.max(0,Math.min(100,S.hp+item.hp));
+  if(item.xpB) S.xp+=item.xpB;
+  S.shopBought[id]=true;
+  save(); toast('Canjeado: '+item.name); render();
+}
+
+/* Death */
+function showRetoInput(){
+  document.getElementById('death-btns').style.display='none';
+  document.getElementById('reto-wrap').classList.add('open');
+}
+function cancelReto(){
+  document.getElementById('death-btns').style.display='flex';
+  document.getElementById('reto-wrap').classList.remove('open');
+}
+function confirmarReto(){
+  const txt=document.getElementById('reto-input').value.trim();
+  if(!txt){toast('Escribe tu reto primero');return;}
+  S.hp=100; S.deathPending=false; save();
+  document.getElementById('death-screen').classList.remove('open');
+  document.getElementById('reto-wrap').classList.remove('open');
+  document.getElementById('death-btns').style.display='flex';
+  document.getElementById('reto-input').value='';
+  toast('💪 Reto aceptado: '+txt+'. ¡Reviviste!'); render();
+}
+function rendirse(){
+  if(!confirm('¿Rendirse? Perderás el 50% de tus XP y Sucres.')) return;
+  S.xp=Math.floor(S.xp*.5);
+  S.sucres=Math.floor(S.sucres*.5);
+  S.hp=50; S.deathPending=false; save();
+  document.getElementById('death-screen').classList.remove('open');
+  toast('😔 Te rendiste. HP restaurado a 50.'); render();
+}
+
+/* Achievements popup */
+function openAchievements(){
+  document.getElementById('ach-popup').classList.add('open');
+  renderAchievements();
+}
+function closeAchievements(){ document.getElementById('ach-popup').classList.remove('open'); }
+function closeAchievementsOutside(e){ if(e.target===document.getElementById('ach-popup')) closeAchievements(); }
+
+function toggleAddForm(){
+  document.getElementById('add-form').classList.toggle('open');
+}
+function saveCustomAch(){
+  const name=document.getElementById('f-name').value.trim();
+  const icon=document.getElementById('f-icon').value.trim()||'🎯';
+  const desc=document.getElementById('f-desc').value.trim()||'Logro personal';
+  const size=document.getElementById('f-size').value;
+  if(!name){toast('Escribe el nombre del logro');return;}
+  const id='c'+Date.now();
+  S.customAchs.push({id,icon,name,desc,size,done:false,custom:true});
   save();
-  toast('Canjeado: '+item.name);
-  render();
+  document.getElementById('f-name').value='';
+  document.getElementById('f-icon').value='';
+  document.getElementById('f-desc').value='';
+  document.getElementById('add-form').classList.remove('open');
+  toast('Logro guardado: '+name);
+  renderAchievements();
 }
 
-function showLevelUp(stageIdx){
-  const el = document.getElementById('lvup');
-  document.getElementById('lvup-l1').textContent = '⭐ EVOLUCION ⭐';
-  document.getElementById('lvup-l2').textContent = STAGES[stageIdx].name;
-  el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 2200);
-}
-
-let toastTimer;
-function toast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove('show'),2000);
-}
-
+/* Tab / Settings */
 function switchTab(tab){
-  document.querySelectorAll('.tab').forEach((t,i)=>{
-    t.classList.toggle('active',['inicio','tienda'][i]===tab);
-  });
-  document.querySelectorAll('.screen').forEach(s=>{
-    s.classList.toggle('active',s.id==='screen-'+tab);
-  });
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['inicio','tienda'][i]===tab));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+tab));
 }
-
 function openSettings(){ document.getElementById('settings-page').classList.add('open'); renderStagesTable(); }
 function closeSettings(){ document.getElementById('settings-page').classList.remove('open'); }
 
@@ -875,29 +813,42 @@ function resetDay(){
   save(); closeSettings(); toast('Checklist reseteado'); render();
 }
 function hardReset(){
-  if(!confirm('¿Borrar TODO tu progreso? Esta acción es irreversible.')) return;
-  S=defaultState(); save(); closeSettings(); toast('Juego reiniciado'); render();
+  if(!confirm('¿Borrar TODO tu progreso? Irreversible.')) return;
+  S=defState(); save(); closeSettings(); toast('Juego reiniciado'); render();
 }
 
-/* ════════════════════════════════
-   STREAK LOGIC (on open)
-════════════════════════════════ */
-function initStreak(){
-  const today = new Date().toDateString();
-  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-  const yStr = yesterday.toDateString();
-  // If first open today and last active was NOT yesterday, reset streak
-  if(S.lastReset === today) return; // already reset today, handled by checkAutoReset
-  if(S.lastActiveDay !== yStr && S.lastActiveDay !== today){
-    S.streak = 0; save();
-  }
+/* ═══════════════════════════════════════
+   VISUAL FX
+═══════════════════════════════════════ */
+function spawnFloat(x,y,text,color){
+  const el=document.createElement('div');
+  el.className='float-num'; el.textContent=text;
+  el.style.cssText=`left:${x}px;top:${y}px;color:${color}`;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),950);
+}
+function spawnFloatCenter(text,color){
+  spawnFloat(window.innerWidth/2-40,window.innerHeight/2,text,color);
+}
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function showLevelUp(si){
+  const el=document.getElementById('lvup');
+  document.getElementById('lvup-l1').textContent='⭐ EVOLUCION ⭐';
+  document.getElementById('lvup-l2').textContent=STAGES[si].name;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-/* ════════════════════════════════
+/* ═══════════════════════════════════════
    INIT
-════════════════════════════════ */
+═══════════════════════════════════════ */
 checkAutoReset();
-initStreak();
 render();
 </script>
 </body>
